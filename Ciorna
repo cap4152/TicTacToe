@@ -1,0 +1,203 @@
+﻿/*
+object
+    table
+element
+    array   row[x]
+        collumn[y]
+
+        square[x * y]
+        value[pl / ai / empty]
+
+
+
+class check_win_row
+
+00 01 02
+10 11 12
+20 21 22
+
+00 01 02 03
+10 11 12 13
+20 21 22 23 
+30 31 23 33
+
+
++---+
+| 1 |
++---+
+
+	
+1 2 3
+4 5 6
+7 8 9
+	
+0 1 2
+3 4 5
+6 7 8
+
+x x 3
+x 5 6
+7 8 9 
+
+for i
+    for j
+    {   lastEmptySlot = i,j
+        if i,j = x
+            countCol++
+    }
+    if countCol 2 
+
+
+
+    if i,j=x
+        countRow++
+    
+while
+	If true
+		do
+		make false
+	
+
+
+
+AI Move Alg
+    CheckWinningMove()
+    CheckLosingMove()
+    CheckNextBestMove()
+    else RNGMove()
+
+    CheckWinningMove()
+    {
+        foreach
+            countPlayer
+
+        static bool Check_win_row(int[,] tabel)
+        {
+            int firstElement = tabel[0, 0];
+            int j = 0;
+            int i = 0;
+            bool check = false;
+
+            
+            int count=0;
+            int lastEmptySlot;
+            for (i = 0; i < tabel.GetLength(0); i++)
+            {
+                
+                if ( tabel[i,j]!= 100 && tabel[i,j !=200)
+                    lastEmptySlot=tabel[i,j]
+                if (count <= tabel.GetLength(0)-1)
+                    check = true
+                    break
+                if ( tabel[i,j]==100)
+                    count++
+
+
+                
+                
+                
+                
+
+                firstElement = tabel[i, 0];
+                j = 0;
+                while (j < tabel.GetLength(1))
+                {
+                    if (firstElement != tabel[i, j])
+                        break;
+                    if (j == tabel.GetLength(1) - 1)
+                        check = true;
+                    j++;
+                }
+                if (check == true)
+                    break;
+            }
+            return check;
+        }
+            
+    }
+
+
+
+
+
+
+
+
+user input:
+rows and cols
+first or 2nd
+tabel position
+
+
+class check_win_coll
+
+class check_win_diag
+
+check win
+
+    check_win_row
+    check_win_coll
+
+    check_win_diag
+
+
+class ai_move
+
+    when AI move table[i][j] => ai
+
+class pl_move
+
+    when pl move table[i][j] => pl
+class print_table
+	for i=1 => x 
+		for j=1 => y
+
+class show_winner
+	if winner = ai
+        print 'tough titi'
+	if winner = player
+        print 'dafq'
+
+class choice
+	if yes 
+		return 1
+	if no 
+		return 0
+
+class play_game(var smth)
+	if smth == 0 
+		return
+	while winner == empty
+        pl_move
+
+        check_win
+        print_table
+
+        ai_move
+        check_win
+
+        print_table
+	if winner != empty
+    show_winner
+
+
+
+
+
+main()
+
+    init()
+
+    play_game(choice)
+
+
+
+
+
+
+
+
+
+
+
+      */  

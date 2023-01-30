@@ -1,0 +1,16 @@
+C:\Users\jhn_r\source\repos\tictac_console\ConsoleApp3\bin\Release\ConsoleApp3.exe.config
+C:\Users\jhn_r\source\repos\tictac_console\ConsoleApp3\bin\Release\ConsoleApp3.exe
+C:\Users\jhn_r\source\repos\tictac_console\ConsoleApp3\bin\Release\ConsoleApp3.pdb
+C:\Users\jhn_r\source\repos\tictac_console\ConsoleApp3\bin\Release\System.Buffers.dll
+C:\Users\jhn_r\source\repos\tictac_console\ConsoleApp3\bin\Release\System.Collections.Immutable.dll
+C:\Users\jhn_r\source\repos\tictac_console\ConsoleApp3\bin\Release\System.Memory.dll
+C:\Users\jhn_r\source\repos\tictac_console\ConsoleApp3\bin\Release\System.Numerics.Vectors.dll
+C:\Users\jhn_r\source\repos\tictac_console\ConsoleApp3\bin\Release\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\jhn_r\source\repos\tictac_console\ConsoleApp3\bin\Release\System.Buffers.xml
+C:\Users\jhn_r\source\repos\tictac_console\ConsoleApp3\bin\Release\System.Collections.Immutable.xml
+C:\Users\jhn_r\source\repos\tictac_console\ConsoleApp3\bin\Release\System.Memory.xml
+C:\Users\jhn_r\source\repos\tictac_console\ConsoleApp3\bin\Release\System.Numerics.Vectors.xml
+C:\Users\jhn_r\source\repos\tictac_console\ConsoleApp3\bin\Release\System.Runtime.CompilerServices.Unsafe.xml
+C:\Users\jhn_r\source\repos\tictac_console\ConsoleApp3\obj\Release\TicTac.csproj.CoreCompileInputs.cache
+C:\Users\jhn_r\source\repos\tictac_console\ConsoleApp3\obj\Release\ConsoleApp3.exe
+C:\Users\jhn_r\source\repos\tictac_console\ConsoleApp3\obj\Release\ConsoleApp3.pdb
