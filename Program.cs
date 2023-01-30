@@ -863,7 +863,6 @@ namespace TicTacToe
 
             DefaultConsoleColor();
 
-            Debug.WriteLine("test");
 
             int lines;
             int columns;
