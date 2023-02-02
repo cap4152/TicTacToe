@@ -30,3 +30,6 @@ D:\Programming\GitHubProjects\TicTacToe\obj\Debug\TicTac.csproj.CoreCompileInput
 D:\Programming\GitHubProjects\TicTacToe\obj\Debug\TicTac.csproj.CopyComplete
 D:\Programming\GitHubProjects\TicTacToe\obj\Debug\TicTacToe.exe
 D:\Programming\GitHubProjects\TicTacToe\obj\Debug\TicTacToe.pdb
+D:\Programming\GitHubProjects\TicTacToe\obj\Debug\TicTac.csprojAssemblyReference.cache
+D:\Programming\GitHubProjects\TicTacToe\obj\Debug\TicTacToe.Form1.resources
+D:\Programming\GitHubProjects\TicTacToe\obj\Debug\TicTac.csproj.GenerateResource.cache

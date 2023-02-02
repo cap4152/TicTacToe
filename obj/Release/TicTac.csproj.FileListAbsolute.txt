@@ -14,3 +14,16 @@ C:\Users\jhn_r\source\repos\tictac_console\ConsoleApp3\bin\Release\System.Runtim
 C:\Users\jhn_r\source\repos\tictac_console\ConsoleApp3\obj\Release\TicTac.csproj.CoreCompileInputs.cache
 C:\Users\jhn_r\source\repos\tictac_console\ConsoleApp3\obj\Release\ConsoleApp3.exe
 C:\Users\jhn_r\source\repos\tictac_console\ConsoleApp3\obj\Release\ConsoleApp3.pdb
+D:\Programming\GitHubProjects\TicTacToe\bin\Release\TicTacToe.exe.config
+D:\Programming\GitHubProjects\TicTacToe\bin\Release\TicTacToe.exe
+D:\Programming\GitHubProjects\TicTacToe\bin\Release\TicTacToe.pdb
+D:\Programming\GitHubProjects\TicTacToe\bin\Release\System.Buffers.xml
+D:\Programming\GitHubProjects\TicTacToe\bin\Release\System.Collections.Immutable.xml
+D:\Programming\GitHubProjects\TicTacToe\bin\Release\System.Memory.xml
+D:\Programming\GitHubProjects\TicTacToe\bin\Release\System.Numerics.Vectors.xml
+D:\Programming\GitHubProjects\TicTacToe\bin\Release\System.Runtime.CompilerServices.Unsafe.xml
+D:\Programming\GitHubProjects\TicTacToe\obj\Release\TicTac.csprojAssemblyReference.cache
+D:\Programming\GitHubProjects\TicTacToe\obj\Release\TicTac.csproj.CoreCompileInputs.cache
+D:\Programming\GitHubProjects\TicTacToe\obj\Release\TicTac.csproj.CopyComplete
+D:\Programming\GitHubProjects\TicTacToe\obj\Release\TicTacToe.exe
+D:\Programming\GitHubProjects\TicTacToe\obj\Release\TicTacToe.pdb

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 
 
+
 namespace TicTacToe
 {
     
@@ -861,8 +862,9 @@ namespace TicTacToe
             //TODO: ShowWinner 
 
 
-            DefaultConsoleColor();
 
+            DefaultConsoleColor();
+            
 
             int lines;
             int columns;

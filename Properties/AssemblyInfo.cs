@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 [assembly: AssemblyTitle("TicTacToe")]
 [assembly: AssemblyDescription("TicTacToe")]
-[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyConfiguration("TicTacToe")]
 [assembly: AssemblyCompany("Cap SRL INC")]
 [assembly: AssemblyProduct("TicTacToe")]
 [assembly: AssemblyCopyright("Copyright ©  2022")]
@@ -20,8 +20,8 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
+//generated guid [assembly: Guid("7fcbc66a-d372-4de3-b2e1-87ad6ccec06b")]
 [assembly: Guid("3b091864-79af-4651-a667-514c0ab5fba1")]
-
 // Version information for an assembly consists of the following four values:
 //
 //      Major Version
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("1.0.*")]
+[assembly: AssemblyFileVersion("1.0.*")]
