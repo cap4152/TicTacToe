@@ -10,25 +10,25 @@ using System.Diagnostics;
 namespace TicTacToe
 {
     
-    class Cell
-    {
-        public int Value { get; set; }
-        public bool IsTaken { get; set; }
-        public string IsTakenBy { get; set; }
-    }
+    //class Cell
+    //{
+    //    public int Value { get; set; }
+    //    public bool IsTaken { get; set; }
+    //    public string IsTakenBy { get; set; }
+    //}
     class Program
     {
-        public static Cell MyCreateTable()
-        {
-            Cell cell = new Cell();
-            return cell;
-        }
+        //public static Cell MyCreateTable()
+        //{
+        //    Cell cell = new Cell();
+        //    return cell;
+        //}
 
-        public static void InstantiateTable(int Lines)
-        {
-            Cell[,] table= new Cell[Lines, Lines];
+        //public static void InstantiateTable(int Lines)
+        //{
+        //    Cell[,] table= new Cell[Lines, Lines];
 
-        }
+        //}
         
 
         static void DefaultConsoleColor()
