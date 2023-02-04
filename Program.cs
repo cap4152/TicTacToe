@@ -7,86 +7,188 @@ using System.Diagnostics;
 
 
 
-namespace TicTacToe
-{
-    
-    //class Cell
-    //{
-    //    public int Value { get; set; }
-    //    public bool IsTaken { get; set; }
-    //    public string IsTakenBy { get; set; }
-    //}
-    class Program
-    {
-        //public static Cell MyCreateTable()
-        //{
-        //    Cell cell = new Cell();
-        //    return cell;
-        //}
+namespace TicTacToe {
 
-        //public static void InstantiateTable(int Lines)
-        //{
-        //    Cell[,] table= new Cell[Lines, Lines];
+    class Cell {
+        public int Value;
+        public bool IsTaken;
+        public string IsTakenBy;
 
-        //}
-        
-
-        static void DefaultConsoleColor()
-        {
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
-        }
-        static void ChangePlayerConsoleColor()
-        {
-            Console.ForegroundColor = ConsoleColor.Green;
-        }
-        static void ChangeAiConsoleColor()
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
+        public Cell(int Value, bool IsTaken, string IsTakenBy) {
+            this.Value = Value;
+            this.IsTaken = IsTaken;
+            this.IsTakenBy = IsTakenBy;
         }
 
-        static int RandomGenerator(int NumberMin, int NumberMax)
-        {
-            int val;
-            int min = NumberMin;
-            int max = NumberMax;
-            System.Threading.Thread.Sleep(1);
-            Random random = new Random();
-            val = random.Next(min, max);
-            return val;
+    }
+
+    class Program {
+        public static object CreateObjectTable(Cell[,] ObjectTable) {
+            int temp = 1;
+            for (int i = 0; i < ObjectTable.GetLength(0); i++) {
+                for (int j = 0; j < ObjectTable.GetLength(1); j++) {
+                    ObjectTable[i, j] = new Cell(temp, false, "none");
+                    temp++;
+                }
+            }
+            return 0;
         }
 
-        static void PrintTableValue(int[,] tabel, int i, int j)
-        {
-            int Player = 100;
-            int AI = 200;
-            if (tabel[i, j] == Player)
-            {
+        public static void PrintObjectTable(Cell[,] ObjectTable) {
+            for (int i = 0; i < ObjectTable.GetLength(0); i++) {
+                for (int j = 0; j < ObjectTable.GetLength(1); j++) {
+                    if (ObjectTable[i, j].IsTaken) {
+                        Console.WriteLine(ObjectTable[i, j].IsTakenBy);
+                    }
+                    else {
+                        Console.Write(ObjectTable[i, j].Value + " ");
+                    }
+                }
+                Console.WriteLine("");
+            }
+
+        }
+        public static bool CheckDraw(Cell[,] ObjectTable) {
+
+            int availableSquares = ObjectTable.GetLength(0) * ObjectTable.GetLength(1);
+            for (int i = 0; i < ObjectTable.GetLength(0); i++) {
+                for (int j = 0; j < ObjectTable.GetLength(1); j++) {
+                    if (ObjectTable[i, j].IsTaken)
+                        return false;
+                    else
+                        availableSquares--;
+                }
+            }
+            if (availableSquares == 0)
+                return true;
+            else
+                return false;
+        }
+        public static int CheckWin(Cell[,] ObjectTable) /* returns */{
+
+            int result = -1;
+            result = CheckWinCol(ObjectTable);
+            if (result != -1)
+                return result;
+            result = CheckWinRow(ObjectTable);
+            if (result != -1)
+                return result;
+            result = CheckWinDiag(ObjectTable);
+            if (result != -1)
+                return result;
+            return -1;
+        }
+
+        public static int CheckWinCol(Cell[,] ObjectTable) /* returns 20 + Col(J+1) if all elements of the col are identical or -1 if not win*/{
+            int i = 0;
+            int j = 0;
+            bool check = false;
+
+            //Col
+            for (j = 0; j < ObjectTable.GetLength(1); j++) {
+                string firstElem = ObjectTable[0, j].IsTakenBy;
+                for (i = 0; i < ObjectTable.GetLength(0); i++) {
+                    if (firstElem != ObjectTable[i, j].IsTakenBy) {
+                        break;
+                    }
+                    if (j == ObjectTable.GetLength(1) - 1)
+                        check = true;
+                }
+                if (check)
+                    return 20 + j + 1;
+
+            }
+            return -1;
+        }
+
+        public static int CheckWinRow(Cell[,] ObjectTable) /* returns 10 + row(i+1) if all elements of the row are identical or -1 if not win*/{
+            int i = 0;
+            int j = 0;
+            bool check = false;
+
+            //row
+            for (i = 0; i < ObjectTable.GetLength(0); i++) {
+                string firstElem = ObjectTable[i, 0].IsTakenBy;
+                for (j = 0; j < ObjectTable.GetLength(1); j++) {
+                    if (firstElem != ObjectTable[i, j].IsTakenBy) {
+                        break;
+                    }
+                    if (j == ObjectTable.GetLength(1) - 1)
+                        check = true;
+                }
+                if (check)
+                    return 10 + i + 1;
+
+            }
+            return -1;
+
+        }
+        public static int CheckWinDiag(Cell[,] ObjectTable) /* returns 31 for diag princ, 32 for diag sec or -1 if not win*/{
+
+            if (CheckWinDiagPrinc(ObjectTable))
+                return 31;
+            else if (CheckWinDiagSec(ObjectTable))
+                return 32;
+            else
+                return -1;
+        }
+
+        public static string NumberToString(int NumberToString) {
+            if (NumberToString == 1)
+                return "1st ";
+            else if (NumberToString == 2)
+                return "2nd ";
+            else if (NumberToString == 3)
+                return "3rd ";
+            else
+                return NumberToString + "th ";
+        }
+
+        public static int ShowWinner(int Value) {
+            int value = Value;
+            int temp = -1;
+
+            if (value == -1)
+                return -1;
+            if (value > 30) {
+                temp = value % 30;
+                Console.WriteLine("on" + NumberToString(temp) + "diagonal");
+            }
+            else if (value > 20) {
+                temp = value % 20;
+                Console.WriteLine("on " + NumberToString(temp) + "row");
+            }
+            else if (value > 10) {
+                temp = value % 10;
+                Console.WriteLine("on " + NumberToString(temp) + "line");
+            }
+            return temp;
+        }
+
+        static void PrintTableValue(Cell[,] ObjectTable, int i, int j) {
+
+            if (ObjectTable[i, j].IsTakenBy == "X") {
                 ChangePlayerConsoleColor();
                 Console.Write("X");
                 DefaultConsoleColor();
             }
-            else if (tabel[i, j] == AI)
-            {
+            else if (ObjectTable[i, j].IsTakenBy == "0") {
                 ChangeAiConsoleColor();
                 Console.Write("0");
                 DefaultConsoleColor();
             }
-            else
-            {
-                Console.Write(tabel[i, j]);
+            else {
+                Console.Write(ObjectTable[i, j].IsTakenBy);
             }
         }
-        static void PrintTableBorder(int[,] tabel, int length, int maxval)
-        {
+        static void PrintTableBorder(Cell[,] ObjectTable, int length, int maxval) {
             int digits = length;
             int Max = maxval;
             int j;
 
-            for (j = 0; j < tabel.GetLength(1); j++)
-            {
+            for (j = 0; j < ObjectTable.GetLength(1); j++) {
                 Console.Write("+-");
-                for (int k = 1; k < digits; k++)
-                {
+                for (int k = 1; k < digits; k++) {
                     Console.Write("--");
                     if (Max < 100)
                         Console.Write("-");
@@ -95,23 +197,253 @@ namespace TicTacToe
             }
             Console.WriteLine();
         }
-        static void PrintTable(int[,] tabel)
-        {
+        static void PrintTable(Cell[,] ObjectTable) {
+            Console.Clear();
+            int MaxValue = ObjectTable.GetLength(0) * ObjectTable.GetLength(1);
+            int digits = MaxValue.ToString().Length;
+
+            int i; int j;
+
+            for (i = 0; i < ObjectTable.GetLength(0); i++) {
+                PrintTableBorder(ObjectTable, digits, MaxValue); /// top line
+
+                for (j = 0; j < ObjectTable.GetLength(1); j++) // mid line
+                {
+                    Console.Write("|");
+                    for (int k = 1; k < digits; k++) {
+                        Console.Write(" ");
+                        if (ObjectTable[i, j].Value < 10 || ObjectTable[i, j].IsTakenBy == "X" || ObjectTable[i, j].IsTakenBy == "0") // add spaces for values
+                            Console.Write(" ");
+                    }
+
+                    PrintTableValue(ObjectTable, i, j);         // print table value
+
+                    for (int k = 1; k < digits; k++)
+                        Console.Write(" ");
+                    Console.Write("|");
+                }
+                Console.WriteLine();
+
+                PrintTableBorder(ObjectTable, digits, MaxValue); //bot line
+            }
+        }
+
+        public static bool CheckWinDiagPrinc(Cell[,] ObjectTable) /*diag princ */{
+            string firstElement = ObjectTable[0, 0].IsTakenBy;
+            int j = 0;
+
+            while (j < ObjectTable.GetLength(1)) {
+                if (ObjectTable[j, j].IsTakenBy != firstElement)
+                    break;
+                else
+                    j++;
+            }
+            if (j == ObjectTable.GetLength(1))
+                return true;
+            else
+                return false;
+        }
+        public static bool CheckWinDiagSec(Cell[,] ObjectTable) /*diag sec */{
+
+
+            string diag2elem = ObjectTable[0, ObjectTable.GetLength(1) - 1].IsTakenBy;
+            int j;
+            int i;
+            bool check = false;
+
+            for (i = 0; i < ObjectTable.GetLength(0); i++) {
+                for (j = ObjectTable.GetLength(1) - 1; j >= 0; j--) {
+                    if ((i + j) == ObjectTable.GetLength(0) - 1) {
+                        if (ObjectTable[i, j].IsTakenBy != diag2elem)
+                            return false;
+                        else
+                            check = true;
+                    }
+                }
+            }
+            return check;
+
+        }
+
+        public static void AssignCell(Cell[,] ObjectTable, int i, int j, string player) {
+            ObjectTable[i, j].IsTaken = true;
+            ObjectTable[i, j].IsTakenBy = player;
+        }
+        public static void UnAssignCell(Cell[,] ObjectTable, int i, int j) {
+            ObjectTable[i, j].IsTaken = false;
+            ObjectTable[i, j].IsTakenBy = "none";
+        }
+
+
+        public static int UserInputTableCell(Cell[,] ObjectTable) {
+            string userInput;
+            bool success; int square;
+
+            while (true) {
+                Console.Write("What square:");
+                userInput = Console.ReadLine();
+                success = int.TryParse(userInput, out square);
+                bool isTaken = ObjectTable[ObjectTable.GetLength(0) / (square - 1), ObjectTable.GetLength(0) % (square - 1)].IsTaken;
+                if (userInput.Length != 0 && success == true && square != 0 && square <= (ObjectTable.GetLength(0) * ObjectTable.GetLength(1)) && !isTaken)
+                    break;
+                Console.WriteLine("Thats not an available number in the table. Try again.");
+            }
+            success = int.TryParse(userInput, out square);
+            return square;
+        }
+
+        public static int MiniMax(Cell[,] ObjectTable, string player, bool MaximizingPlayer) {
+            // winner condition and return values
+            if (CheckDraw(ObjectTable))
+                return 0;
+            else if (CheckWin(ObjectTable) != -1)
+                return 1;
+            else if (CheckWin(ObjectTable) == -1)
+                return -1;
+
+
+            int MaxEval = int.MinValue;
+            int MinEval = int.MaxValue;
+            string Player;
+
+            if (player == "X")
+                Player = "X";
+            else
+                Player = "0";
+
+
+            if (MaximizingPlayer) {
+                if (Player == "0")          // this might need changing
+                    Player = "X";
+                else
+                    Player = "0";
+                for (int i = 0; i < ObjectTable.GetLength(0); i++) {            // Maximizing player - Checks for his best score.
+                    for (int j = 0; j < ObjectTable.GetLength(1); j++) {
+                        if (!ObjectTable[i, j].IsTaken) {
+
+                            AssignCell(ObjectTable, i, j, Player);
+                            int currentEval = MiniMax(ObjectTable, Player, false);
+                            UnAssignCell(ObjectTable, i, j);
+
+                            if (currentEval > MaxEval) {
+                                MaxEval = currentEval;
+                            }
+                            if (currentEval < MinEval) {
+                                MinEval = currentEval;
+                            }
+
+                        }
+
+                    }
+                }
+            }
+            else {
+                if (Player == "X")              // this might need changing
+                    Player = "0";
+                else
+                    Player = "X";
+
+                for (int i = 0; i < ObjectTable.GetLength(0); i++) {            // Minimizing player - Checks for oponents.
+                    for (int j = 0; j < ObjectTable.GetLength(1); j++) {
+                        if (!ObjectTable[i, j].IsTaken) {
+
+                            AssignCell(ObjectTable, i, j, Player);
+                            int currentEval = MiniMax(ObjectTable, Player, true);
+                            UnAssignCell(ObjectTable, i, j);
+
+                            if (currentEval > MaxEval) {
+                                MaxEval = currentEval;
+                            }
+                            if (currentEval < MinEval) {
+                                MinEval = currentEval;
+                            }
+
+                        }
+
+                    }
+                }
+
+
+
+            }
+
+            if (MaximizingPlayer) { // this might need changing 
+                return MaxEval;
+            }
+            else {
+                return MinEval;
+            }
+
+        }
+
+        static void DefaultConsoleColor() {
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+        }
+        static void ChangePlayerConsoleColor() {
+            Console.ForegroundColor = ConsoleColor.Green;
+        }
+        static void ChangeAiConsoleColor() {
+            Console.ForegroundColor = ConsoleColor.Red;
+        }
+
+
+        static int RandomGenerator(int NumberMin, int NumberMax) {
+            int val;
+            int min = NumberMin;
+            int max = NumberMax;
+            // System.Threading.Thread.Sleep(1);
+            Random random = new Random();
+            val = random.Next(min, max);
+            return val;
+        }
+
+        static void PrintTableValue(int[,] tabel, int i, int j) {
+            int Player = 100;
+            int AI = 200;
+            if (tabel[i, j] == Player) {
+                ChangePlayerConsoleColor();
+                Console.Write("X");
+                DefaultConsoleColor();
+            }
+            else if (tabel[i, j] == AI) {
+                ChangeAiConsoleColor();
+                Console.Write("0");
+                DefaultConsoleColor();
+            }
+            else {
+                Console.Write(tabel[i, j]);
+            }
+        }
+        static void PrintTableBorder(int[,] tabel, int length, int maxval) {
+            int digits = length;
+            int Max = maxval;
+            int j;
+
+            for (j = 0; j < tabel.GetLength(1); j++) {
+                Console.Write("+-");
+                for (int k = 1; k < digits; k++) {
+                    Console.Write("--");
+                    if (Max < 100)
+                        Console.Write("-");
+                }
+                Console.Write("+");
+            }
+            Console.WriteLine();
+        }
+        static void PrintTable(int[,] tabel) {
             Console.Clear();
             int MaxValue = tabel.GetLength(0) * tabel.GetLength(1);
             int digits = MaxValue.ToString().Length;
 
             int i; int j;
 
-            for (i = 0; i < tabel.GetLength(0); i++)
-            {
+            for (i = 0; i < tabel.GetLength(0); i++) {
                 PrintTableBorder(tabel, digits, MaxValue); /// top line
 
                 for (j = 0; j < tabel.GetLength(1); j++) // mid line
                 {
                     Console.Write("|");
-                    for (int k = 1; k < digits; k++)
-                    {
+                    for (int k = 1; k < digits; k++) {
                         Console.Write(" ");
                         if (tabel[i, j] < 10 || tabel[i, j] == 100 || tabel[i, j] == 200) // add spaces for values
                             Console.Write(" ");
@@ -129,8 +461,7 @@ namespace TicTacToe
             }
         }
 
-        static bool Check_win_all_casses(int[,] tabel)
-        {
+        static bool Check_win_all_casses(int[,] tabel) {
             // function incorporates all other checks for a winner 
             // if any of the other functions return true, this function returns true
 
@@ -139,19 +470,16 @@ namespace TicTacToe
             else
                 return false;
         }
-        static bool Check_win_row(int[,] tabel)
-        {
+        static bool Check_win_row(int[,] tabel) {
             int firstElement = tabel[0, 0];
-            int j = 0;
-            int i = 0;
+            int j;
+            int i;
             bool check = false;
 
-            for (i = 0; i < tabel.GetLength(0); i++)
-            {
+            for (i = 0; i < tabel.GetLength(0); i++) {
                 firstElement = tabel[i, 0];
                 j = 0;
-                while (j < tabel.GetLength(1))
-                {
+                while (j < tabel.GetLength(1)) {
                     if (firstElement != tabel[i, j])
                         break;
                     if (j == tabel.GetLength(1) - 1)
@@ -163,18 +491,15 @@ namespace TicTacToe
             }
             return check;
         }
-        static bool Check_win_coll(int[,] tabel)
-        {
+        static bool Check_win_coll(int[,] tabel) {
             int firstElement = tabel[0, 0];
             int j = 0;
             int i = 0;
             bool check = false;
 
-            for (j = 0; j < tabel.GetLength(0); j++)
-            {
+            for (j = 0; j < tabel.GetLength(0); j++) {
                 firstElement = tabel[0, j];
-                while (i < tabel.GetLength(1))
-                {
+                while (i < tabel.GetLength(1)) {
                     if (firstElement != tabel[i, j])
                         break;
                     if (i == tabel.GetLength(1) - 1)
@@ -187,21 +512,18 @@ namespace TicTacToe
             }
             return check;
         }
-        static bool Check_win_diag(int[,] tabel)
-        {
+        static bool Check_win_diag(int[,] tabel) {
             bool diag_principal = Check_win_diag_principal(tabel);
             bool diag_secundar = Check_win_diag_secundar(tabel);
             if (diag_principal || diag_secundar)
                 return true;
             return false;
         }
-        static bool Check_win_diag_principal(int[,] tabel)
-        {
+        static bool Check_win_diag_principal(int[,] tabel) {
             int firstElement = tabel[0, 0];
             int j = 0;
 
-            while (j < tabel.GetLength(1))
-            {
+            while (j < tabel.GetLength(1)) {
                 if (tabel[j, j] != firstElement)
                     break;
                 else
@@ -212,19 +534,15 @@ namespace TicTacToe
             else
                 return false;
         }
-        static bool Check_win_diag_secundar(int[,] tabel)
-        {
+        static bool Check_win_diag_secundar(int[,] tabel) {
             int diag2elem = tabel[0, tabel.GetLength(1) - 1];
             int j;
             int i;
             bool check = false;
 
-            for (i = 0; i < tabel.GetLength(0); i++)
-            {
-                for (j = tabel.GetLength(1) - 1; j >= 0; j--)
-                {
-                    if ((i + j) == tabel.GetLength(0) - 1)
-                    {
+            for (i = 0; i < tabel.GetLength(0); i++) {
+                for (j = tabel.GetLength(1) - 1; j >= 0; j--) {
+                    if ((i + j) == tabel.GetLength(0) - 1) {
                         if (tabel[i, j] != diag2elem)
                             return false;
                         else
@@ -237,29 +555,23 @@ namespace TicTacToe
         }
 
 
-        static bool EmptyCell(int[,] tabel, int Square)
-        {
+        static bool EmptyCell(int[,] tabel, int Square) {
             int square = Square - 1;
             bool isEmpty = false;
             int i = 0; int j = 0;
 
-            for (i = 0; i < tabel.GetLength(0); i++)
-            {
+            for (i = 0; i < tabel.GetLength(0); i++) {
 
-                if ((square / tabel.GetLength(0) == i))
-                {
-                    if (square % tabel.GetLength(0) == 0)
-                    {
+                if ((square / tabel.GetLength(0) == i)) {
+                    if (square % tabel.GetLength(0) == 0) {
                         if (tabel[i, j] != 100 && tabel[i, j] != 200)   // check if cell is available.
                         {
                             isEmpty = true;
                             break;
                         }
                     }
-                    for (j = 0; j < tabel.GetLength(1); j++)
-                    {
-                        if (square % tabel.GetLength(0) == j)
-                        {
+                    for (j = 0; j < tabel.GetLength(1); j++) {
+                        if (square % tabel.GetLength(0) == j) {
                             if (tabel[i, j] != 100 && tabel[i, j] != 200) // check if cell is available.
                             {
                                 isEmpty = true;
@@ -273,14 +585,11 @@ namespace TicTacToe
             return isEmpty;
         }
 
-        static void Init_Table(int[,] tabel)
-        {
+        static void Init_Table(int[,] tabel) {
             int temp = 1;
 
-            for (int i = 0; i < tabel.GetLength(0); i++)
-            {
-                for (int j = 0; j < tabel.GetLength(1); j++)
-                {
+            for (int i = 0; i < tabel.GetLength(0); i++) {
+                for (int j = 0; j < tabel.GetLength(1); j++) {
                     tabel[i, j] = temp;
                     temp++;
                 }
@@ -288,8 +597,7 @@ namespace TicTacToe
             PrintTable(tabel);
         }
 
-        static void Test(int[,] tabel)
-        {
+        static void Test(int[,] tabel) {
             //Test method while building the program. 
             //Method to be decommisioned once finised.
 
@@ -313,13 +621,10 @@ namespace TicTacToe
             test = Check_win_coll(tabel);
             Console.WriteLine("col " + test);
         }
-        static void Test_Init_Table(int[,] tabel)
-        {
+        static void Test_Init_Table(int[,] tabel) {
 
-            for (int i = 0; i < tabel.GetLength(0); i++)
-            {
-                for (int j = 0; j < tabel.GetLength(1); j++)
-                {
+            for (int i = 0; i < tabel.GetLength(0); i++) {
+                for (int j = 0; j < tabel.GetLength(1); j++) {
                     //if (i == 0 && j== (tabel.GetLength(1)-1))
                     //    tabel[i, j] = 0;
                     //else
@@ -331,15 +636,13 @@ namespace TicTacToe
             PrintTable(tabel);
         }
 
-        public static int UserInputTableSize()
-        {
+        public static int UserInputTableSize() {
             int lines;
 
             string userInput;
             bool success;
             Console.Clear();
-            while (true)
-            {
+            while (true) {
                 Console.Write("Between 3 and 9 rows and columns how big would you like the table to be?: ");
                 userInput = Console.ReadLine();
                 success = int.TryParse(userInput, out lines);
@@ -350,13 +653,11 @@ namespace TicTacToe
             success = int.TryParse(userInput, out lines);
             return lines;
         }
-        public static int UserInputTableCell(int[,] tabel)
-        {
+        public static int UserInputTableCell(int[,] tabel) {
             string userInput;
             bool success; int square;
 
-            while (true)
-            {
+            while (true) {
                 Console.Write("What square:");
                 userInput = Console.ReadLine();
                 success = int.TryParse(userInput, out square);
@@ -368,8 +669,7 @@ namespace TicTacToe
             return square;
         }
 
-        public static int AiCheckLosingMove(int[,] tabel)
-        {
+        public static int AiCheckLosingMove(int[,] tabel) {
             int square = -1;
             if (AiCheckLosingMoveRow(tabel) != -1)
                 square = AiCheckLosingMoveRow(tabel);
@@ -382,8 +682,7 @@ namespace TicTacToe
             return square;
         }
         // TBC
-        public static int AiCheckLosingMoveRow(int[,] tabel)
-        {
+        public static int AiCheckLosingMoveRow(int[,] tabel) {
             int square = -1;
             int i = 0; int j = 0;
             int count = 0;
@@ -391,20 +690,17 @@ namespace TicTacToe
             bool check = false;
 
 
-            for (i = 0; i < tabel.GetLength(0); i++)
-            {
+            for (i = 0; i < tabel.GetLength(0); i++) {
                 lastEmptySlot = -1;
                 count = 0;
 
-                for (j = 0; j < tabel.GetLength(1); j++)
-                {
+                for (j = 0; j < tabel.GetLength(1); j++) {
                     if (tabel[i, j] != 100 && tabel[i, j] != 200)
                         lastEmptySlot = tabel[i, j];
                     if (tabel[i, j] == 100)
                         count++;
                 }
-                if (count == tabel.GetLength(1) - 1 && lastEmptySlot != -1)
-                {
+                if (count == tabel.GetLength(1) - 1 && lastEmptySlot != -1) {
                     square = lastEmptySlot;
                     check = true;
                     break;
@@ -415,27 +711,23 @@ namespace TicTacToe
             else
                 return -1;
         }
-        public static int AiCheckLosingMoveColumn(int[,] tabel)
-        {
+        public static int AiCheckLosingMoveColumn(int[,] tabel) {
             int square = -1;
             int i = 0; int j = 0;
             int count = 0;
             int lastEmptySlot = -1;
             bool check = false;
 
-            for (j = 0; j < tabel.GetLength(0); j++)
-            {
+            for (j = 0; j < tabel.GetLength(0); j++) {
                 lastEmptySlot = -1;
                 count = 0;
-                for (i = 0; i < tabel.GetLength(1); i++)
-                {
+                for (i = 0; i < tabel.GetLength(1); i++) {
                     if (tabel[i, j] != 100 && tabel[i, j] != 200)
                         lastEmptySlot = tabel[i, j];
                     if (tabel[i, j] == 100)
                         count++;
                 }
-                if (count == tabel.GetLength(1) - 1 && lastEmptySlot != -1)
-                {
+                if (count == tabel.GetLength(1) - 1 && lastEmptySlot != -1) {
                     square = lastEmptySlot;
                     check = true;
                     break;
@@ -446,22 +738,19 @@ namespace TicTacToe
             else
                 return -1;
         }
-        public static int AiCheckLosingMoveDiagPrincipal(int[,] tabel)
-        {
+        public static int AiCheckLosingMoveDiagPrincipal(int[,] tabel) {
             int square = -1;
             int j = 0;
             int count = 0;
             int lastEmptySlot = -1;
             bool check = false;
 
-            while (j < tabel.GetLength(1))
-            {
+            while (j < tabel.GetLength(1)) {
                 if (tabel[j, j] != 100 && tabel[j, j] != 200)
                     lastEmptySlot = tabel[j, j];
                 if (tabel[j, j] == 100)
                     count++;
-                if (count == tabel.GetLength(1) - 1 && lastEmptySlot != -1)
-                {
+                if (count == tabel.GetLength(1) - 1 && lastEmptySlot != -1) {
                     square = lastEmptySlot;
                     check = true;
                     break;
@@ -474,8 +763,7 @@ namespace TicTacToe
             else
                 return -1;
         }
-        public static int AiCheckLosingMoveDiagSecundar(int[,] tabel)
-        {
+        public static int AiCheckLosingMoveDiagSecundar(int[,] tabel) {
             int diag2elem = tabel[0, tabel.GetLength(1) - 1];
             int j;
             int i;
@@ -484,18 +772,14 @@ namespace TicTacToe
             int count = 0;
             int square = -1;
 
-            for (i = 0; i < tabel.GetLength(0); i++)
-            {
-                for (j = tabel.GetLength(1) - 1; j >= 0; j--)
-                {
-                    if ((i + j) == tabel.GetLength(0) - 1)
-                    {
+            for (i = 0; i < tabel.GetLength(0); i++) {
+                for (j = tabel.GetLength(1) - 1; j >= 0; j--) {
+                    if ((i + j) == tabel.GetLength(0) - 1) {
                         if (tabel[i, j] != 100 && tabel[i, j] != 200)
                             lastEmptySlot = tabel[i, j];
                         if (tabel[i, j] == 100)
                             count++;
-                        if (count == tabel.GetLength(1) - 1 && lastEmptySlot != -1)
-                        {
+                        if (count == tabel.GetLength(1) - 1 && lastEmptySlot != -1) {
                             square = lastEmptySlot;
                             check = true;
                             break;
@@ -509,8 +793,7 @@ namespace TicTacToe
                 return -1;
         }
 
-        public static int AiCheckWinningMove(int[,] tabel)
-        {
+        public static int AiCheckWinningMove(int[,] tabel) {
             int square = -1;
             if (AiCheckWinningMoveRow(tabel) != -1)
                 square = AiCheckWinningMoveRow(tabel);
@@ -523,8 +806,7 @@ namespace TicTacToe
             return square;
         }
 
-        public static int AiCheckWinningMoveRow(int[,] tabel)
-        {
+        public static int AiCheckWinningMoveRow(int[,] tabel) {
             int square = -1;
             int i = 0; int j = 0;
             int count = 0;
@@ -532,20 +814,17 @@ namespace TicTacToe
             bool check = false;
 
 
-            for (i = 0; i < tabel.GetLength(0); i++)
-            {
+            for (i = 0; i < tabel.GetLength(0); i++) {
                 lastEmptySlot = -1;
                 count = 0;
 
-                for (j = 0; j < tabel.GetLength(1); j++)
-                {
+                for (j = 0; j < tabel.GetLength(1); j++) {
                     if (tabel[i, j] != 100 && tabel[i, j] != 200)
                         lastEmptySlot = tabel[i, j];
                     if (tabel[i, j] == 200)
                         count++;
                 }
-                if (count == tabel.GetLength(1) - 1 && lastEmptySlot != -1)
-                {
+                if (count == tabel.GetLength(1) - 1 && lastEmptySlot != -1) {
                     square = lastEmptySlot;
                     check = true;
                     break;
@@ -556,27 +835,23 @@ namespace TicTacToe
             else
                 return -1;
         }
-        public static int AiCheckWinningMoveColumn(int[,] tabel)
-        {
+        public static int AiCheckWinningMoveColumn(int[,] tabel) {
             int square = -1;
             int i = 0; int j = 0;
             int count = 0;
             int lastEmptySlot = -1;
             bool check = false;
 
-            for (j = 0; j < tabel.GetLength(0); j++)
-            {
+            for (j = 0; j < tabel.GetLength(0); j++) {
                 lastEmptySlot = -1;
                 count = 0;
-                for (i = 0; i < tabel.GetLength(1); i++)
-                {
+                for (i = 0; i < tabel.GetLength(1); i++) {
                     if (tabel[i, j] != 100 && tabel[i, j] != 200)
                         lastEmptySlot = tabel[i, j];
                     if (tabel[i, j] == 200)
                         count++;
                 }
-                if (count == tabel.GetLength(1) - 1 && lastEmptySlot != -1)
-                {
+                if (count == tabel.GetLength(1) - 1 && lastEmptySlot != -1) {
                     square = lastEmptySlot;
                     check = true;
                     break;
@@ -587,22 +862,19 @@ namespace TicTacToe
             else
                 return -1;
         }
-        public static int AiCheckWinningMoveDiagPrincipal(int[,] tabel)
-        {
+        public static int AiCheckWinningMoveDiagPrincipal(int[,] tabel) {
             int square = -1;
             int j = 0;
             int count = 0;
             int lastEmptySlot = -1;
             bool check = false;
 
-            while (j < tabel.GetLength(1))
-            {
+            while (j < tabel.GetLength(1)) {
                 if (tabel[j, j] != 100 && tabel[j, j] != 200)
                     lastEmptySlot = tabel[j, j];
                 if (tabel[j, j] == 200)
                     count++;
-                if (count == tabel.GetLength(1) - 1 && lastEmptySlot != -1)
-                {
+                if (count == tabel.GetLength(1) - 1 && lastEmptySlot != -1) {
                     square = lastEmptySlot;
                     check = true;
                     break;
@@ -615,8 +887,7 @@ namespace TicTacToe
             else
                 return -1;
         }
-        public static int AiCheckWinningMoveDiagSecundar(int[,] tabel)
-        {
+        public static int AiCheckWinningMoveDiagSecundar(int[,] tabel) {
             int diag2elem = tabel[0, tabel.GetLength(1) - 1];
             int j;
             int i;
@@ -625,18 +896,14 @@ namespace TicTacToe
             int count = 0;
             int square = -1;
 
-            for (i = 0; i < tabel.GetLength(0); i++)
-            {
-                for (j = tabel.GetLength(1) - 1; j >= 0; j--)
-                {
-                    if ((i + j) == tabel.GetLength(0) - 1)
-                    {
+            for (i = 0; i < tabel.GetLength(0); i++) {
+                for (j = tabel.GetLength(1) - 1; j >= 0; j--) {
+                    if ((i + j) == tabel.GetLength(0) - 1) {
                         if (tabel[i, j] != 100 && tabel[i, j] != 200)
                             lastEmptySlot = tabel[i, j];
                         if (tabel[i, j] == 200)
                             count++;
-                        if (count == tabel.GetLength(1) - 1 && lastEmptySlot != -1)
-                        {
+                        if (count == tabel.GetLength(1) - 1 && lastEmptySlot != -1) {
                             square = lastEmptySlot;
                             check = true;
                             break;
@@ -665,15 +932,13 @@ namespace TicTacToe
             // check column that do not contain enemy square
             //
 
-            if (tabel[tabel.GetLength(0) / 2, tabel.GetLength(1) / 2] == ai)
-            {
+            if (tabel[tabel.GetLength(0) / 2, tabel.GetLength(1) / 2] == ai) {
 
             }
             return square;
         }
 
-        public static bool CheckIfCellIsEmpty(int[,] tabel, int i, int j)
-        {
+        public static bool CheckIfCellIsEmpty(int[,] tabel, int i, int j) {
             if (tabel[i, j] != 100 && tabel[i, j] != 200)
                 return true;
             else
@@ -681,18 +946,15 @@ namespace TicTacToe
 
         }
 
-        public static int AiInputTableCell(int[,] tabel)
-        {
+        public static int AiInputTableCell(int[,] tabel) {
             int square = 0;
             int i = 0; int j = 0;
             bool check = false;
 
-            if (AiCheckWinningMove(tabel) != -1)
-            {
+            if (AiCheckWinningMove(tabel) != -1) {
                 square = AiCheckWinningMove(tabel);
             }
-            else if (AiCheckLosingMove(tabel) != -1)
-            {
+            else if (AiCheckLosingMove(tabel) != -1) {
                 square = AiCheckLosingMove(tabel);
             }
             else if (CheckIfCellIsEmpty(tabel, tabel.GetLength(0) / 2, tabel.GetLength(1) / 2))    // check middle of the table if available
@@ -701,18 +963,13 @@ namespace TicTacToe
             }
             else if (AiNextBestMove(tabel) != -1)
                 square = AiNextBestMove(tabel);
-            else
-            {
+            else {
                 square = RandomAiInputTableCell(tabel);                                     //random available moves
-                if (square == -1)
-                {
+                if (square == -1) {
                     //                                                                      // checks available moves
-                    for (i = 0; i < tabel.GetLength(0); i++)
-                    {
-                        for (j = 0; j < tabel.GetLength(1); j++)
-                        {
-                            if (CheckIfCellIsEmpty(tabel, i, j))
-                            {
+                    for (i = 0; i < tabel.GetLength(0); i++) {
+                        for (j = 0; j < tabel.GetLength(1); j++) {
+                            if (CheckIfCellIsEmpty(tabel, i, j)) {
                                 square = tabel[i, j];
                                 check = true;
                                 break;
@@ -732,25 +989,21 @@ namespace TicTacToe
 
         }
 
-        public static int RandomAiInputTableCell(int[,] tabel)
-        {
+        public static int RandomAiInputTableCell(int[,] tabel) {
             int i, j;
             int square = 1;
             bool check = false;
             int counter = 0;
-            int randomMaxTries = tabel.GetLength(0) * tabel.GetLength(1) + (tabel.GetLength(0)/2 * tabel.GetLength(1) /2 ) / 2;
+            int randomMaxTries = tabel.GetLength(0) * tabel.GetLength(1) + (tabel.GetLength(0) / 2 * tabel.GetLength(1) / 2) / 2;
 
             i = RandomGenerator(0, tabel.GetLength(0));
             j = RandomGenerator(0, tabel.GetLength(1));
 
-            while (check == false)
-            {
-                if (counter == randomMaxTries)
-                {
+            while (check == false) {
+                if (counter == randomMaxTries) {
                     break;
                 }
-                if (CheckIfCellIsEmpty(tabel, i, j))
-                {
+                if (CheckIfCellIsEmpty(tabel, i, j)) {
                     square = tabel[i, j];
                     check = true;
                 }
@@ -760,8 +1013,7 @@ namespace TicTacToe
 
             }
 
-            if (counter == randomMaxTries)
-            {
+            if (counter == randomMaxTries) {
                 return -1;
             }
             else
@@ -769,8 +1021,7 @@ namespace TicTacToe
 
         }                       // returns a random open square or -1 if there is a long wait time.
 
-        static void UpdateTableCell(int[,] tabel, int Square, int Player)
-        {
+        static void UpdateTableCell(int[,] tabel, int Square, int Player) {
             //Method checks each line to find the correct line. 
             //Once found it checks for the correct square to place the player or AI sign
             //once sign is placed into the table, it breaks out of the loop.
@@ -782,21 +1033,16 @@ namespace TicTacToe
             int FriendOrFoe = Player;
             int square = Square - 1;
 
-            for (int i = 0; i < tabel.GetLength(0); i++)
-            {
+            for (int i = 0; i < tabel.GetLength(0); i++) {
 
-                if ((square / tabel.GetLength(0) == i))
-                {
-                    if (square % tabel.GetLength(0) == 0)
-                    {
+                if ((square / tabel.GetLength(0) == i)) {
+                    if (square % tabel.GetLength(0) == 0) {
                         tabel[i, 0] = FriendOrFoe;
                         break;
                     }
-                    for (int j = 0; j < tabel.GetLength(1); j++)
-                    {
+                    for (int j = 0; j < tabel.GetLength(1); j++) {
 
-                        if (square % tabel.GetLength(0) == j)
-                        {
+                        if (square % tabel.GetLength(0) == j) {
                             tabel[i, j] = FriendOrFoe;
                             break;
                         }
@@ -807,11 +1053,9 @@ namespace TicTacToe
 
         }
         ///
-        static bool PlayAgain(string Message)
-        {
+        static bool UserInputString(string Message) {
             string userInput;
-            while (true)
-            {
+            while (true) {
                 Console.WriteLine(Message);
                 userInput = Console.ReadLine();
                 userInput = userInput.ToUpper();
@@ -824,23 +1068,22 @@ namespace TicTacToe
             else
                 return false;
         }
-        static void ShowWinner(int[,] tabel)
-        {
+        static void ShowWinner(int[,] tabel) {
 
         }
-        static bool CheckDraw(int[,] tabel)
-        {
+        static bool CheckDraw(int[,] tabel) {
             int i, j;
             int availableSquares = tabel.GetLength(0) * tabel.GetLength(1);
 
-            for (i = 0; i < tabel.GetLength(0); i++)
-            {
-                for (j = 0; j < tabel.GetLength(1); j++)
-                {
-                    if (tabel[i, j] == 100 || tabel[i, j] == 200)
-                    {
+            for (i = 0; i < tabel.GetLength(0); i++) {
+                for (j = 0; j < tabel.GetLength(1); j++) {
+                    if (tabel[i, j] == 100 || tabel[i, j] == 200) {
                         availableSquares--;
                     }
+                    else {
+                        return false;
+                    }
+
 
                 }
             }
@@ -851,8 +1094,7 @@ namespace TicTacToe
                 return false;
 
         }
-        static void Main(string[] args)
-        {
+        static void Main(string[] args) {
             //var p='X'; 
             //var a = 'O'; 
 
@@ -864,7 +1106,7 @@ namespace TicTacToe
 
 
             DefaultConsoleColor();
-            
+
 
             int lines;
             int columns;
@@ -883,11 +1125,16 @@ namespace TicTacToe
 
             do // loops and at the end checks if you want to play again. 
             {
-                //lines = 3; // testing purposes
-                lines = UserInputTableSize();
 
-                
+                //lines = UserInputTableSize();
+                lines = 3; // testing purposes
+
                 int[,] tabel = new int[lines, lines];
+                Cell[,] ObjectTable = new Cell[lines, lines];
+
+
+
+
                 {
                     winner = 0;
                     player = 100;
@@ -895,38 +1142,35 @@ namespace TicTacToe
                     isDraw = false;
 
                     // Init_table or Test to be run exclusively 
-                    Init_Table(tabel);
 
+                    Init_Table(tabel);
+                    CreateObjectTable(ObjectTable);
+                    PrintObjectTable(ObjectTable);
                     //Test(tabel);
 
                     DefaultConsoleColor();
 
-                    isPlayerFirst = PlayAgain(firstOrSecond); // player choses if he goes 1st  or 2nd 
+                    isPlayerFirst = UserInputString(firstOrSecond);             // player choses if he goes 1st  or 2nd 
                     //isPlayerFirst = false;
                     PrintTable(tabel);
                 }
 
                 {
-                    do //gameplay loop - plays until winner is found
-                    {
-
-                        if (!isPlayerFirst)
-                        {
+                    do {                                                     //gameplay loop - plays until winner is found
+                        if (!isPlayerFirst) {
                             isPlayerFirst = true;
                         }
-                        else
-                        {
+                        else {
                             UpdateTableCell(tabel, UserInputTableCell(tabel), player);
                             PrintTable(tabel);
                         }
 
-                        if (CheckDraw(tabel))
-                        {
+
+                        if (CheckDraw(tabel)) {
                             isDraw = true;
                             break;
                         }
-                        if (Check_win_all_casses(tabel))
-                        {
+                        if (Check_win_all_casses(tabel)) {
                             winner = player;
                             break;
                         }
@@ -934,8 +1178,7 @@ namespace TicTacToe
                         UpdateTableCell(tabel, AiInputTableCell(tabel), AI);
                         PrintTable(tabel);
 
-                        if (CheckDraw(tabel))
-                        {
+                        if (CheckDraw(tabel)) {
                             isDraw = true;
                             break;
                         }
@@ -944,42 +1187,16 @@ namespace TicTacToe
 
                 } // Player always first. 
 
-                if (isDraw && winner == 0)
-                {
+                if (isDraw && winner == 0) {
                     Console.WriteLine("Now no one gets to be a winner. We are all losers!");
                 }
-                if (winner == player)
-                {
+                if (winner == player) {
                     Console.WriteLine("Congratz! You win!");
                 }
-                if (winner != player && isDraw == false)
-                {
+                if (winner != player && isDraw == false) {
                     Console.WriteLine("Sucks to be you!");
                 }
-            } while (PlayAgain(playAgain));
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            } while (UserInputString(playAgain));
 
 
 
