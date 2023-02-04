@@ -4,7 +4,7 @@
   <description asmv2:iconFile="x-mark-xxl.ico" xmlns="urn:schemas-microsoft-com:asm.v1" />
   <application />
   <entryPoint>
-    <assemblyIdentity name="TicTacToe" version="1.0.8434.28920" language="neutral" processorArchitecture="msil" />
+    <assemblyIdentity name="TicTacToe" version="1.0.8436.1177" language="neutral" processorArchitecture="msil" />
     <commandLine file="TicTacToe.exe" parameters="" />
   </entryPoint>
   <trustInfo>
@@ -43,14 +43,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="TicTacToe.exe" size="116192">
-      <assemblyIdentity name="TicTacToe" version="1.0.8434.28920" language="neutral" processorArchitecture="msil" />
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="TicTacToe.exe" size="118240">
+      <assemblyIdentity name="TicTacToe" version="1.0.8436.1177" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>INRGLrBf+YNwI0sxtwT/cEZURYgiiT4eQO60Hx0JOhI=</dsig:DigestValue>
+        <dsig:DigestValue>W2LOpw6ZYIOCb7xJfRqPHIQ4eyO8g83uDELTVjv/CPI=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

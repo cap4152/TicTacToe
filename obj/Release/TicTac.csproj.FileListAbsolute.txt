@@ -25,4 +25,3 @@ D:\Programming\GitHubProjects\TicTacToe\obj\Release\TicTacToe.exe.manifest
 D:\Programming\GitHubProjects\TicTacToe\obj\Release\TicTacToe.application
 D:\Programming\GitHubProjects\TicTacToe\obj\Release\TicTacToe.exe
 D:\Programming\GitHubProjects\TicTacToe\obj\Release\TicTacToe.pdb
-D:\Programming\GitHubProjects\TicTacToe\obj\Release\TicTac.csprojAssemblyReference.cache

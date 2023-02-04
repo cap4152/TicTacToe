@@ -35,4 +35,3 @@ D:\Programming\GitHubProjects\TicTacToe\obj\Debug\TicTacToe.application
 D:\Programming\GitHubProjects\TicTacToe\obj\Debug\TicTac.csproj.CopyComplete
 D:\Programming\GitHubProjects\TicTacToe\obj\Debug\TicTacToe.exe
 D:\Programming\GitHubProjects\TicTacToe\obj\Debug\TicTacToe.pdb
-D:\Programming\GitHubProjects\TicTacToe\obj\Debug\TicTac.csprojAssemblyReference.cache
