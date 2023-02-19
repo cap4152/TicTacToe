@@ -23,7 +23,7 @@ namespace TicTacToe {
     }
 
     class Program {
-        public static object CreateObjectTable(Cell[,] ObjectTable) {
+        public static void CreateObjectTable(Cell[,] ObjectTable) {
             int temp = 1;
             for (int i = 0; i < ObjectTable.GetLength(0); i++) {
                 for (int j = 0; j < ObjectTable.GetLength(1); j++) {
@@ -31,10 +31,10 @@ namespace TicTacToe {
                     temp++;
                 }
             }
-            return 0;
+            //PrintObjectTable(ObjectTable);
         }
 
-        public static void PrintObjectTable(Cell[,] ObjectTable) {
+        public static void PrintObjectTableNoBorder(Cell[,] ObjectTable) {
             for (int i = 0; i < ObjectTable.GetLength(0); i++) {
                 for (int j = 0; j < ObjectTable.GetLength(1); j++) {
                     if (ObjectTable[i, j].IsTaken) {
@@ -48,6 +48,7 @@ namespace TicTacToe {
             }
 
         }
+
         public static bool CheckDraw(Cell[,] ObjectTable) {
 
             int availableSquares = ObjectTable.GetLength(0) * ObjectTable.GetLength(1);
@@ -64,7 +65,7 @@ namespace TicTacToe {
             else
                 return false;
         }
-        public static int CheckWin(Cell[,] ObjectTable) /* returns */{
+        public static int CheckWin(Cell[,] ObjectTable) /* returns -1 if no win or values of CheckWin functons below*/{
 
             int result = -1;
             result = CheckWinCol(ObjectTable);
@@ -78,7 +79,6 @@ namespace TicTacToe {
                 return result;
             return -1;
         }
-
         public static int CheckWinCol(Cell[,] ObjectTable) /* returns 20 + Col(J+1) if all elements of the col are identical or -1 if not win*/{
             int i = 0;
             int j = 0;
@@ -100,7 +100,6 @@ namespace TicTacToe {
             }
             return -1;
         }
-
         public static int CheckWinRow(Cell[,] ObjectTable) /* returns 10 + row(i+1) if all elements of the row are identical or -1 if not win*/{
             int i = 0;
             int j = 0;
@@ -132,19 +131,43 @@ namespace TicTacToe {
             else
                 return -1;
         }
+        public static bool CheckWinDiagPrinc(Cell[,] ObjectTable) /*Check if winner is on diag princ */{
+            string firstElement = ObjectTable[0, 0].IsTakenBy;
+            int j = 0;
 
-        public static string NumberToString(int NumberToString) {
-            if (NumberToString == 1)
-                return "1st ";
-            else if (NumberToString == 2)
-                return "2nd ";
-            else if (NumberToString == 3)
-                return "3rd ";
+            while (j < ObjectTable.GetLength(1)) {
+                if (ObjectTable[j, j].IsTakenBy != firstElement)
+                    break;
+                else
+                    j++;
+            }
+            if (j == ObjectTable.GetLength(1))
+                return true;
             else
-                return NumberToString + "th ";
+                return false;
         }
+        public static bool CheckWinDiagSec(Cell[,] ObjectTable) /*Check if winner is on diag sec */{
 
-        public static int ShowWinner(int Value) {
+
+            string diag2elem = ObjectTable[0, ObjectTable.GetLength(1) - 1].IsTakenBy;
+            int j;
+            int i;
+            bool check = false;
+
+            for (i = 0; i < ObjectTable.GetLength(0); i++) {
+                for (j = ObjectTable.GetLength(1) - 1; j >= 0; j--) {
+                    if ((i + j) == ObjectTable.GetLength(0) - 1) {
+                        if (ObjectTable[i, j].IsTakenBy != diag2elem)
+                            return false;
+                        else
+                            check = true;
+                    }
+                }
+            }
+            return check;
+
+        }
+        public static int ShowWinner(int Value) /* returns winner block based on Value inputed.  */  {
             int value = Value;
             int temp = -1;
 
@@ -165,7 +188,18 @@ namespace TicTacToe {
             return temp;
         }
 
-        static void PrintTableValue(Cell[,] ObjectTable, int i, int j) {
+        public static string NumberToString(int NumberToString) /* turns int 1,2,3,etc into 1st, 2nd, 3rd as string */ {
+            if (NumberToString == 1)
+                return "1st ";
+            else if (NumberToString == 2)
+                return "2nd ";
+            else if (NumberToString == 3)
+                return "3rd ";
+            else
+                return NumberToString + "th ";
+        }
+
+        static void PrintTableValue(Cell[,] ObjectTable, int i, int j) /* Called by PrintTable() -> Prints table values*/  {
 
             if (ObjectTable[i, j].IsTakenBy == "X") {
                 ChangePlayerConsoleColor();
@@ -178,10 +212,10 @@ namespace TicTacToe {
                 DefaultConsoleColor();
             }
             else {
-                Console.Write(ObjectTable[i, j].IsTakenBy);
+                Console.Write(ObjectTable[i, j].Value);
             }
         }
-        static void PrintTableBorder(Cell[,] ObjectTable, int length, int maxval) {
+        static void PrintTableBorder(Cell[,] ObjectTable, int length, int maxval) /* Called by PrintTable() -> Prints table borders*/{
             int digits = length;
             int Max = maxval;
             int j;
@@ -197,8 +231,8 @@ namespace TicTacToe {
             }
             Console.WriteLine();
         }
-        static void PrintTable(Cell[,] ObjectTable) {
-            Console.Clear();
+        static void PrintObjectTable(Cell[,] ObjectTable) /* prints table*/{
+            //Console.Clear();
             int MaxValue = ObjectTable.GetLength(0) * ObjectTable.GetLength(1);
             int digits = MaxValue.ToString().Length;
 
@@ -228,43 +262,41 @@ namespace TicTacToe {
             }
         }
 
-        public static bool CheckWinDiagPrinc(Cell[,] ObjectTable) /*diag princ */{
-            string firstElement = ObjectTable[0, 0].IsTakenBy;
-            int j = 0;
+        static void GetCoordsOfSquare(Cell[,] ObjectTable, int Square)/* might be usefull TBD */ {
 
-            while (j < ObjectTable.GetLength(1)) {
-                if (ObjectTable[j, j].IsTakenBy != firstElement)
-                    break;
-                else
-                    j++;
-            }
-            if (j == ObjectTable.GetLength(1))
-                return true;
-            else
-                return false;
         }
-        public static bool CheckWinDiagSec(Cell[,] ObjectTable) /*diag sec */{
 
+        static void UpdateTableCell(Cell[,] ObjectTable, int Square, string Player) {
+            //Method checks each line to find the correct line. 
+            //Once found it checks for the correct square to place the player or AI sign
+            //once sign is placed into the table, it breaks out of the loop.
 
-            string diag2elem = ObjectTable[0, ObjectTable.GetLength(1) - 1].IsTakenBy;
-            int j;
-            int i;
-            bool check = false;
+            //Method takes tabel to be able to modify the values of the table
+            //Method takes Square, the place Player selected in the table
+            //Method takes player. Might be temporary until AI function is defined.
 
-            for (i = 0; i < ObjectTable.GetLength(0); i++) {
-                for (j = ObjectTable.GetLength(1) - 1; j >= 0; j--) {
-                    if ((i + j) == ObjectTable.GetLength(0) - 1) {
-                        if (ObjectTable[i, j].IsTakenBy != diag2elem)
-                            return false;
-                        else
-                            check = true;
+            int square = Square - 1;
+
+            for (int i = 0; i < ObjectTable.GetLength(0); i++) {
+
+                if ((square / ObjectTable.GetLength(0) == i)) {
+                    if (square % ObjectTable.GetLength(0) == 0) {
+                        AssignCell(ObjectTable, i,  0, Player);
+                        break;
+                    }
+                    for (int j = 0; j < ObjectTable.GetLength(1); j++) {
+
+                        if (square % ObjectTable.GetLength(0) == j) {
+                            AssignCell(ObjectTable, i, j, Player);
+                                
+                            break;
+                        }
                     }
                 }
+
             }
-            return check;
 
         }
-
         public static void AssignCell(Cell[,] ObjectTable, int i, int j, string player) {
             ObjectTable[i, j].IsTaken = true;
             ObjectTable[i, j].IsTakenBy = player;
@@ -274,8 +306,83 @@ namespace TicTacToe {
             ObjectTable[i, j].IsTakenBy = "none";
         }
 
+        static bool IsTaken(Cell[,] ObjectTable, int Square) {
+            //Method checks each line to find the correct line. 
+            //Once found it checks for the correct square to place the player or AI sign
+            //once sign is placed into the table, it breaks out of the loop.
 
-        public static int UserInputTableCell(Cell[,] ObjectTable) {
+            //Method takes tabel to be able to modify the values of the table
+            //Method takes Square, the place Player selected in the table
+            //Method takes player. Might be temporary until AI function is defined.
+
+            int square = Square - 1;
+
+            for (int i = 0; i < ObjectTable.GetLength(0); i++) {
+
+                if ((square / ObjectTable.GetLength(0) == i)) {
+                    if (square % ObjectTable.GetLength(0) == 0) {
+                        if (ObjectTable[i, 0].IsTaken)
+                            return true;
+                    }
+                    for (int j = 0; j < ObjectTable.GetLength(1); j++) {
+
+                        if (square % ObjectTable.GetLength(0) == j) {
+                            if (ObjectTable[i, j].IsTaken)
+                                return true;
+                        }
+                    }
+                }
+            }
+            return false;
+
+        }
+
+        public static int AIInputTableCell(Cell[,] ObjectTable, string Player) {
+            int square = 0;
+            int i = 0; int j = 0;
+            bool check = false;
+
+            MiniMax(ObjectTable, Player, true);
+
+
+            //if (AiCheckWinningMove(ObjectTable) != -1) {
+            //    square = AiCheckWinningMove(ObjectTable);
+            //}
+            //else if (AiCheckLosingMove(ObjectTable) != -1) {
+            //    square = AiCheckLosingMove(ObjectTable);
+            //}
+            //else if (CheckIfCellIsEmpty(ObjectTable, ObjectTable.GetLength(0) / 2, ObjectTable.GetLength(1) / 2))    // check middle of the table if available
+            //{                                                                               // to modify into next best              
+            //    square = ObjectTable[ObjectTable.GetLength(0) / 2, ObjectTable.GetLength(1) / 2];             //place instead of mid
+            //}
+            //else if (AiNextBestMove(ObjectTable) != -1)
+            //    square = AiNextBestMove(ObjectTable);
+            //else {
+            //    square = RandomAiInputTableCell(ObjectTable);                                     //random available moves
+            //    if (square == -1) {
+            //        //                                                                      // checks available moves
+            //        for (i = 0; i < ObjectTable.GetLength(0); i++) {
+            //            for (j = 0; j < ObjectTable.GetLength(1); j++) {
+            //                if (CheckIfCellIsEmpty(ObjectTable, i, j)) {
+            //                    square = ObjectTable[i, j];
+            //                    check = true;
+            //                    break;
+            //                }
+            //            }
+            //            if (check == true)
+            //                break;
+            //        }
+            //        //}                                                                    // checks available moves
+            //    }
+
+
+            //}
+
+            return square;
+            
+        }
+
+        public static int UserInputTableCell(Cell[,] ObjectTable) /* potential optimization possible. TBI*/{
             string userInput;
             bool success; int square;
 
@@ -283,8 +390,7 @@ namespace TicTacToe {
                 Console.Write("What square:");
                 userInput = Console.ReadLine();
                 success = int.TryParse(userInput, out square);
-                bool isTaken = ObjectTable[ObjectTable.GetLength(0) / (square - 1), ObjectTable.GetLength(0) % (square - 1)].IsTaken;
-                if (userInput.Length != 0 && success == true && square != 0 && square <= (ObjectTable.GetLength(0) * ObjectTable.GetLength(1)) && !isTaken)
+                if (userInput.Length != 0 && success == true && square != 0 && square <= (ObjectTable.GetLength(0) * ObjectTable.GetLength(1)) && !IsTaken(ObjectTable, square))
                     break;
                 Console.WriteLine("Thats not an available number in the table. Try again.");
             }
@@ -292,7 +398,7 @@ namespace TicTacToe {
             return square;
         }
 
-        public static int MiniMax(Cell[,] ObjectTable, string player, bool MaximizingPlayer) {
+        public static int MiniMax(Cell[,] ObjectTable, string Player, bool MaximizingPlayer) {
             // winner condition and return values
             if (CheckDraw(ObjectTable))
                 return 0;
@@ -304,25 +410,25 @@ namespace TicTacToe {
 
             int MaxEval = int.MinValue;
             int MinEval = int.MaxValue;
-            string Player;
+            string playerNow;
 
-            if (player == "X")
-                Player = "X";
+            if (Player == "X")
+                playerNow = "X";
             else
-                Player = "0";
+                playerNow = "0";
 
 
             if (MaximizingPlayer) {
-                if (Player == "0")          // this might need changing
-                    Player = "X";
+                if (playerNow == "0")          // this might need changing
+                    playerNow = "X";
                 else
-                    Player = "0";
+                    playerNow = "0";
                 for (int i = 0; i < ObjectTable.GetLength(0); i++) {            // Maximizing player - Checks for his best score.
                     for (int j = 0; j < ObjectTable.GetLength(1); j++) {
                         if (!ObjectTable[i, j].IsTaken) {
 
-                            AssignCell(ObjectTable, i, j, Player);
-                            int currentEval = MiniMax(ObjectTable, Player, false);
+                            AssignCell(ObjectTable, i, j, playerNow);
+                            int currentEval = MiniMax(ObjectTable, playerNow, false);
                             UnAssignCell(ObjectTable, i, j);
 
                             if (currentEval > MaxEval) {
@@ -338,17 +444,17 @@ namespace TicTacToe {
                 }
             }
             else {
-                if (Player == "X")              // this might need changing
-                    Player = "0";
+                if (playerNow == "X")              // this might need changing
+                    playerNow = "0";
                 else
-                    Player = "X";
+                    playerNow = "X";
 
                 for (int i = 0; i < ObjectTable.GetLength(0); i++) {            // Minimizing player - Checks for oponents.
                     for (int j = 0; j < ObjectTable.GetLength(1); j++) {
                         if (!ObjectTable[i, j].IsTaken) {
 
-                            AssignCell(ObjectTable, i, j, Player);
-                            int currentEval = MiniMax(ObjectTable, Player, true);
+                            AssignCell(ObjectTable, i, j, playerNow);
+                            int currentEval = MiniMax(ObjectTable, playerNow, true);
                             UnAssignCell(ObjectTable, i, j);
 
                             if (currentEval > MaxEval) {
@@ -1110,14 +1216,12 @@ namespace TicTacToe {
 
             int lines;
             int columns;
-            int winnerRow;
-            int winnerCollumn;
-            int winnerDiag;
+
 
             bool isPlayerFirst = true;
             bool isDraw = false;
-            int player;
-            int AI;
+            int player; string stringPlayer;
+            int AI; string stringAI;
             int winner = 0;
 
             string playAgain = "Would you like to play again? (Y/N)";
@@ -1138,31 +1242,47 @@ namespace TicTacToe {
                 {
                     winner = 0;
                     player = 100;
+                    stringPlayer = "X";
                     AI = 200;
+                    stringAI = "0";
                     isDraw = false;
 
                     // Init_table or Test to be run exclusively 
 
                     Init_Table(tabel);
                     CreateObjectTable(ObjectTable);
-                    PrintObjectTable(ObjectTable);
+                    
                     //Test(tabel);
 
                     DefaultConsoleColor();
 
                     isPlayerFirst = UserInputString(firstOrSecond);             // player choses if he goes 1st  or 2nd 
-                    //isPlayerFirst = false;
+                                                                                //isPlayerFirst = false;
+                                                                                //Console.WriteLine("Normal Table"); 
                     PrintTable(tabel);
+                    //Console.WriteLine("Object Table"); 
+                    //PrintObjectTable(ObjectTable);
                 }
 
+                var turncount = 0;
+                if (isPlayerFirst) {
+                    turncount = 1;
+                }
+                
                 {
                     do {                                                     //gameplay loop - plays until winner is found
-                        if (!isPlayerFirst) {
-                            isPlayerFirst = true;
+                        if (!isPlayerFirst && turncount == 0) {
+
                         }
                         else {
-                            UpdateTableCell(tabel, UserInputTableCell(tabel), player);
+                            var userInput = UserInputTableCell(ObjectTable);
+                            UpdateTableCell(tabel, userInput, player);
+                            //UpdateTableCell(ObjectTable, userInput, stringPlayer);
+                            //Console.WriteLine("Normal Table"); 
                             PrintTable(tabel);
+                            //Console.WriteLine("Object Table");
+
+                            //PrintObjectTable(ObjectTable);
                         }
 
 
@@ -1177,12 +1297,15 @@ namespace TicTacToe {
 
                         UpdateTableCell(tabel, AiInputTableCell(tabel), AI);
                         PrintTable(tabel);
+                        //UpdateTableCell(ObjectTable, UserInputTableCell(ObjectTable), stringAI);
+                        PrintTable(tabel);
+                        //PrintObjectTable(ObjectTable);
 
                         if (CheckDraw(tabel)) {
                             isDraw = true;
                             break;
                         }
-
+                        turncount++;
                     } while (!Check_win_all_casses(tabel));
 
                 } // Player always first. 
