@@ -21,7 +21,7 @@ namespace TicTacToe {
         }
 
     }
-
+    
     class Program {
         public static void CreateObjectTable(Cell[,] ObjectTable) {
             int temp = 1;
@@ -31,7 +31,7 @@ namespace TicTacToe {
                     temp++;
                 }
             }
-            //PrintObjectTable(ObjectTable);
+            PrintObjectTable(ObjectTable);
         }
 
         public static void PrintObjectTableNoBorder(Cell[,] ObjectTable) {
@@ -51,16 +51,16 @@ namespace TicTacToe {
 
         public static bool CheckDraw(Cell[,] ObjectTable) {
 
-            int availableSquares = ObjectTable.GetLength(0) * ObjectTable.GetLength(1);
+            int totalSquaresAvailable = ObjectTable.GetLength(0) * ObjectTable.GetLength(1);
             for (int i = 0; i < ObjectTable.GetLength(0); i++) {
                 for (int j = 0; j < ObjectTable.GetLength(1); j++) {
-                    if (ObjectTable[i, j].IsTaken)
+                    if (!ObjectTable[i, j].IsTaken)
                         return false;
                     else
-                        availableSquares--;
+                        totalSquaresAvailable--;
                 }
             }
-            if (availableSquares == 0)
+            if (totalSquaresAvailable == 0)
                 return true;
             else
                 return false;
@@ -91,12 +91,14 @@ namespace TicTacToe {
                     if (firstElem != ObjectTable[i, j].IsTakenBy) {
                         break;
                     }
-                    if (j == ObjectTable.GetLength(1) - 1)
-                        check = true;
+
+                    if (j == ObjectTable.GetLength(1) - 1) {
+                        if (ObjectTable[i, j].IsTaken == true)
+                            check = true;
+                    }
                 }
                 if (check)
                     return 20 + j + 1;
-
             }
             return -1;
         }
@@ -112,12 +114,13 @@ namespace TicTacToe {
                     if (firstElem != ObjectTable[i, j].IsTakenBy) {
                         break;
                     }
-                    if (j == ObjectTable.GetLength(1) - 1)
-                        check = true;
+                    if (j == ObjectTable.GetLength(1) - 1) {
+                        if (ObjectTable[i, j].IsTaken == true)
+                            check = true;
+                    }
                 }
                 if (check)
                     return 10 + i + 1;
-
             }
             return -1;
 
@@ -135,11 +138,11 @@ namespace TicTacToe {
             string firstElement = ObjectTable[0, 0].IsTakenBy;
             int j = 0;
 
-            while (j < ObjectTable.GetLength(1)) {
-                if (ObjectTable[j, j].IsTakenBy != firstElement)
-                    break;
-                else
-                    j++;
+            for (j = 0; j < ObjectTable.GetLength(1); j++) {
+                if (ObjectTable[j, j].IsTaken) {
+                    if (ObjectTable[j, j].IsTakenBy != firstElement)
+                        break;
+                }
             }
             if (j == ObjectTable.GetLength(1))
                 return true;
@@ -159,8 +162,9 @@ namespace TicTacToe {
                     if ((i + j) == ObjectTable.GetLength(0) - 1) {
                         if (ObjectTable[i, j].IsTakenBy != diag2elem)
                             return false;
-                        else
+                        else if (ObjectTable[i, j].IsTaken == true)
                             check = true;
+
                     }
                 }
             }
@@ -179,7 +183,7 @@ namespace TicTacToe {
             }
             else if (value > 20) {
                 temp = value % 20;
-                Console.WriteLine("on " + NumberToString(temp) + "row");
+                Console.WriteLine("on " + NumberToString(temp) + "column");
             }
             else if (value > 10) {
                 temp = value % 10;
@@ -232,7 +236,7 @@ namespace TicTacToe {
             Console.WriteLine();
         }
         static void PrintObjectTable(Cell[,] ObjectTable) /* prints table*/{
-            //Console.Clear();
+            Console.Clear();
             int MaxValue = ObjectTable.GetLength(0) * ObjectTable.GetLength(1);
             int digits = MaxValue.ToString().Length;
 
@@ -281,14 +285,14 @@ namespace TicTacToe {
 
                 if ((square / ObjectTable.GetLength(0) == i)) {
                     if (square % ObjectTable.GetLength(0) == 0) {
-                        AssignCell(ObjectTable, i,  0, Player);
+                        AssignCell(ObjectTable, i, 0, Player);
                         break;
                     }
                     for (int j = 0; j < ObjectTable.GetLength(1); j++) {
 
                         if (square % ObjectTable.GetLength(0) == j) {
                             AssignCell(ObjectTable, i, j, Player);
-                                
+
                             break;
                         }
                     }
@@ -342,7 +346,7 @@ namespace TicTacToe {
             int i = 0; int j = 0;
             bool check = false;
 
-            MiniMax(ObjectTable, Player, true);
+            //square = MiniMax(ObjectTable, Player, true);
 
 
             //if (AiCheckWinningMove(ObjectTable) != -1) {
@@ -358,29 +362,63 @@ namespace TicTacToe {
             //else if (AiNextBestMove(ObjectTable) != -1)
             //    square = AiNextBestMove(ObjectTable);
             //else {
-            //    square = RandomAiInputTableCell(ObjectTable);                                     //random available moves
-            //    if (square == -1) {
-            //        //                                                                      // checks available moves
-            //        for (i = 0; i < ObjectTable.GetLength(0); i++) {
-            //            for (j = 0; j < ObjectTable.GetLength(1); j++) {
-            //                if (CheckIfCellIsEmpty(ObjectTable, i, j)) {
-            //                    square = ObjectTable[i, j];
-            //                    check = true;
-            //                    break;
-            //                }
-            //            }
-            //            if (check == true)
-            //                break;
-            //        }
-            //        //}                                                                    // checks available moves
-            //    }
+                square = RandomAiInputTableCell(ObjectTable);                                     //random available moves
+                if (square == -1) {
+                    //                                                                      // checks available moves
+                    for (i = 0; i < ObjectTable.GetLength(0); i++) {
+                        for (j = 0; j < ObjectTable.GetLength(1); j++) {
+                            if (!ObjectTable[i,j].IsTaken) {
+                                square = ObjectTable[i, j].Value;
+                                check = true;
+                                break;
+                            }
+                        }
+                        
+                        if (check == true)
+                            break;
+                    }
+                    //}                                                                    // checks available moves
+                }
 
 
-            //}
+                //}
 
-            return square;
-            
+                return square;
+
         }
+
+        public static int RandomAiInputTableCell(Cell[,] ObjectTable) {
+            int i, j;
+            int square = 1;
+            bool check = false;
+            int counter = 0;
+            int randomMaxTries = ObjectTable.GetLength(0) * ObjectTable.GetLength(1) + (ObjectTable.GetLength(0) / 2 * ObjectTable.GetLength(1) / 2) / 2;
+
+            i = RandomGenerator(0, ObjectTable.GetLength(0));
+            j = RandomGenerator(0, ObjectTable.GetLength(1));
+
+            while (check == false) {
+                if (counter == randomMaxTries) {
+                    break;
+                }
+                if (!ObjectTable[i,j].IsTaken) {
+                    square = ObjectTable[i, j].Value;
+                    check = true;
+                    break;
+                }
+                i = RandomGenerator(0, ObjectTable.GetLength(0));
+                j = RandomGenerator(0, ObjectTable.GetLength(1));
+                counter++;
+
+            }
+
+            if (counter == randomMaxTries) {
+                return -1;
+            }
+            else
+                return square;
+
+        }                       // returns a random open square or -1 if there is a long wait time.
 
         public static int UserInputTableCell(Cell[,] ObjectTable) /* potential optimization possible. TBI*/{
             string userInput;
@@ -492,7 +530,6 @@ namespace TicTacToe {
             Console.ForegroundColor = ConsoleColor.Red;
         }
 
-
         static int RandomGenerator(int NumberMin, int NumberMax) {
             int val;
             int min = NumberMin;
@@ -503,244 +540,243 @@ namespace TicTacToe {
             return val;
         }
 
-        static void PrintTableValue(int[,] tabel, int i, int j) {
-            int Player = 100;
-            int AI = 200;
-            if (tabel[i, j] == Player) {
-                ChangePlayerConsoleColor();
-                Console.Write("X");
-                DefaultConsoleColor();
-            }
-            else if (tabel[i, j] == AI) {
-                ChangeAiConsoleColor();
-                Console.Write("0");
-                DefaultConsoleColor();
-            }
-            else {
-                Console.Write(tabel[i, j]);
-            }
-        }
-        static void PrintTableBorder(int[,] tabel, int length, int maxval) {
-            int digits = length;
-            int Max = maxval;
-            int j;
+        //static void PrintTableValue(int[,] tabel, int i, int j) {
+        //    int Player = 100;
+        //    int AI = 200;
+        //    if (tabel[i, j] == Player) {
+        //        ChangePlayerConsoleColor();
+        //        Console.Write("X");
+        //        DefaultConsoleColor();
+        //    }
+        //    else if (tabel[i, j] == AI) {
+        //        ChangeAiConsoleColor();
+        //        Console.Write("0");
+        //        DefaultConsoleColor();
+        //    }
+        //    else {
+        //        Console.Write(tabel[i, j]);
+        //    }
+        //}
+        //static void PrintTableBorder(int[,] tabel, int length, int maxval) {
+        //    int digits = length;
+        //    int Max = maxval;
+        //    int j;
 
-            for (j = 0; j < tabel.GetLength(1); j++) {
-                Console.Write("+-");
-                for (int k = 1; k < digits; k++) {
-                    Console.Write("--");
-                    if (Max < 100)
-                        Console.Write("-");
-                }
-                Console.Write("+");
-            }
-            Console.WriteLine();
-        }
-        static void PrintTable(int[,] tabel) {
-            Console.Clear();
-            int MaxValue = tabel.GetLength(0) * tabel.GetLength(1);
-            int digits = MaxValue.ToString().Length;
+        //    for (j = 0; j < tabel.GetLength(1); j++) {
+        //        Console.Write("+-");
+        //        for (int k = 1; k < digits; k++) {
+        //            Console.Write("--");
+        //            if (Max < 100)
+        //                Console.Write("-");
+        //        }
+        //        Console.Write("+");
+        //    }
+        //    Console.WriteLine();
+        //}
+        //static void PrintTable(int[,] tabel) {
+        //    Console.Clear();
+        //    int MaxValue = tabel.GetLength(0) * tabel.GetLength(1);
+        //    int digits = MaxValue.ToString().Length;
 
-            int i; int j;
+        //    int i; int j;
 
-            for (i = 0; i < tabel.GetLength(0); i++) {
-                PrintTableBorder(tabel, digits, MaxValue); /// top line
+        //    for (i = 0; i < tabel.GetLength(0); i++) {
+        //        PrintTableBorder(tabel, digits, MaxValue); /// top line
 
-                for (j = 0; j < tabel.GetLength(1); j++) // mid line
-                {
-                    Console.Write("|");
-                    for (int k = 1; k < digits; k++) {
-                        Console.Write(" ");
-                        if (tabel[i, j] < 10 || tabel[i, j] == 100 || tabel[i, j] == 200) // add spaces for values
-                            Console.Write(" ");
-                    }
+        //        for (j = 0; j < tabel.GetLength(1); j++) // mid line
+        //        {
+        //            Console.Write("|");
+        //            for (int k = 1; k < digits; k++) {
+        //                Console.Write(" ");
+        //                if (tabel[i, j] < 10 || tabel[i, j] == 100 || tabel[i, j] == 200) // add spaces for values
+        //                    Console.Write(" ");
+        //            }
 
-                    PrintTableValue(tabel, i, j);         // print table value
+        //            PrintTableValue(tabel, i, j);         // print table value
 
-                    for (int k = 1; k < digits; k++)
-                        Console.Write(" ");
-                    Console.Write("|");
-                }
-                Console.WriteLine();
+        //            for (int k = 1; k < digits; k++)
+        //                Console.Write(" ");
+        //            Console.Write("|");
+        //        }
+        //        Console.WriteLine();
 
-                PrintTableBorder(tabel, digits, MaxValue); //bot line
-            }
-        }
+        //        PrintTableBorder(tabel, digits, MaxValue); //bot line
+        //    }
+        //}
 
-        static bool Check_win_all_casses(int[,] tabel) {
-            // function incorporates all other checks for a winner 
-            // if any of the other functions return true, this function returns true
+        //static bool Check_win_all_casses(int[,] tabel) {
+        //    // function incorporates all other checks for a winner 
+        //    // if any of the other functions return true, this function returns true
 
-            if (Check_win_diag(tabel) || Check_win_row(tabel) || Check_win_coll(tabel))
-                return true;
-            else
-                return false;
-        }
-        static bool Check_win_row(int[,] tabel) {
-            int firstElement = tabel[0, 0];
-            int j;
-            int i;
-            bool check = false;
+        //    if (Check_win_diag(tabel) || Check_win_row(tabel) || Check_win_coll(tabel))
+        //        return true;
+        //    else
+        //        return false;
+        //}
+        //static bool Check_win_row(int[,] tabel) {
+        //    int firstElement = tabel[0, 0];
+        //    int j;
+        //    int i;
+        //    bool check = false;
 
-            for (i = 0; i < tabel.GetLength(0); i++) {
-                firstElement = tabel[i, 0];
-                j = 0;
-                while (j < tabel.GetLength(1)) {
-                    if (firstElement != tabel[i, j])
-                        break;
-                    if (j == tabel.GetLength(1) - 1)
-                        check = true;
-                    j++;
-                }
-                if (check == true)
-                    break;
-            }
-            return check;
-        }
-        static bool Check_win_coll(int[,] tabel) {
-            int firstElement = tabel[0, 0];
-            int j = 0;
-            int i = 0;
-            bool check = false;
+        //    for (i = 0; i < tabel.GetLength(0); i++) {
+        //        firstElement = tabel[i, 0];
+        //        j = 0;
+        //        while (j < tabel.GetLength(1)) {
+        //            if (firstElement != tabel[i, j])
+        //                break;
+        //            if (j == tabel.GetLength(1) - 1)
+        //                check = true;
+        //            j++;
+        //        }
+        //        if (check == true)
+        //            break;
+        //    }
+        //    return check;
+        //}
+        //static bool Check_win_coll(int[,] tabel) {
+        //    int firstElement = tabel[0, 0];
+        //    int j = 0;
+        //    int i = 0;
+        //    bool check = false;
 
-            for (j = 0; j < tabel.GetLength(0); j++) {
-                firstElement = tabel[0, j];
-                while (i < tabel.GetLength(1)) {
-                    if (firstElement != tabel[i, j])
-                        break;
-                    if (i == tabel.GetLength(1) - 1)
-                        check = true;
-                    i++;
-                }
-                i = 0;
-                if (check == true)
-                    break;
-            }
-            return check;
-        }
-        static bool Check_win_diag(int[,] tabel) {
-            bool diag_principal = Check_win_diag_principal(tabel);
-            bool diag_secundar = Check_win_diag_secundar(tabel);
-            if (diag_principal || diag_secundar)
-                return true;
-            return false;
-        }
-        static bool Check_win_diag_principal(int[,] tabel) {
-            int firstElement = tabel[0, 0];
-            int j = 0;
+        //    for (j = 0; j < tabel.GetLength(0); j++) {
+        //        firstElement = tabel[0, j];
+        //        while (i < tabel.GetLength(1)) {
+        //            if (firstElement != tabel[i, j])
+        //                break;
+        //            if (i == tabel.GetLength(1) - 1)
+        //                check = true;
+        //            i++;
+        //        }
+        //        i = 0;
+        //        if (check == true)
+        //            break;
+        //    }
+        //    return check;
+        //}
+        //static bool Check_win_diag(int[,] tabel) {
+        //    bool diag_principal = Check_win_diag_principal(tabel);
+        //    bool diag_secundar = Check_win_diag_secundar(tabel);
+        //    if (diag_principal || diag_secundar)
+        //        return true;
+        //    return false;
+        //}
+        //static bool Check_win_diag_principal(int[,] tabel) {
+        //    int firstElement = tabel[0, 0];
+        //    int j = 0;
 
-            while (j < tabel.GetLength(1)) {
-                if (tabel[j, j] != firstElement)
-                    break;
-                else
-                    j++;
-            }
-            if (j == tabel.GetLength(1))
-                return true;
-            else
-                return false;
-        }
-        static bool Check_win_diag_secundar(int[,] tabel) {
-            int diag2elem = tabel[0, tabel.GetLength(1) - 1];
-            int j;
-            int i;
-            bool check = false;
+        //    while (j < tabel.GetLength(1)) {
+        //        if (tabel[j, j] != firstElement)
+        //            break;
+        //        else
+        //            j++;
+        //    }
+        //    if (j == tabel.GetLength(1))
+        //        return true;
+        //    else
+        //        return false;
+        //}
+        //static bool Check_win_diag_secundar(int[,] tabel) {
+        //    int diag2elem = tabel[0, tabel.GetLength(1) - 1];
+        //    int j;
+        //    int i;
+        //    bool check = false;
 
-            for (i = 0; i < tabel.GetLength(0); i++) {
-                for (j = tabel.GetLength(1) - 1; j >= 0; j--) {
-                    if ((i + j) == tabel.GetLength(0) - 1) {
-                        if (tabel[i, j] != diag2elem)
-                            return false;
-                        else
-                            check = true;
-                    }
-                }
-            }
-            return check;
+        //    for (i = 0; i < tabel.GetLength(0); i++) {
+        //        for (j = tabel.GetLength(1) - 1; j >= 0; j--) {
+        //            if ((i + j) == tabel.GetLength(0) - 1) {
+        //                if (tabel[i, j] != diag2elem)
+        //                    return false;
+        //                else
+        //                    check = true;
+        //            }
+        //        }
+        //    }
+        //    return check;
 
-        }
+        //}
 
+        //static bool EmptyCell(int[,] tabel, int Square) {
+        //    int square = Square - 1;
+        //    bool isEmpty = false;
+        //    int i = 0; int j = 0;
 
-        static bool EmptyCell(int[,] tabel, int Square) {
-            int square = Square - 1;
-            bool isEmpty = false;
-            int i = 0; int j = 0;
+        //    for (i = 0; i < tabel.GetLength(0); i++) {
 
-            for (i = 0; i < tabel.GetLength(0); i++) {
+        //        if ((square / tabel.GetLength(0) == i)) {
+        //            if (square % tabel.GetLength(0) == 0) {
+        //                if (tabel[i, j] != 100 && tabel[i, j] != 200)   // check if cell is available.
+        //                {
+        //                    isEmpty = true;
+        //                    break;
+        //                }
+        //            }
+        //            for (j = 0; j < tabel.GetLength(1); j++) {
+        //                if (square % tabel.GetLength(0) == j) {
+        //                    if (tabel[i, j] != 100 && tabel[i, j] != 200) // check if cell is available.
+        //                    {
+        //                        isEmpty = true;
+        //                        break;
+        //                    }
+        //                }
+        //            }
+        //        }
 
-                if ((square / tabel.GetLength(0) == i)) {
-                    if (square % tabel.GetLength(0) == 0) {
-                        if (tabel[i, j] != 100 && tabel[i, j] != 200)   // check if cell is available.
-                        {
-                            isEmpty = true;
-                            break;
-                        }
-                    }
-                    for (j = 0; j < tabel.GetLength(1); j++) {
-                        if (square % tabel.GetLength(0) == j) {
-                            if (tabel[i, j] != 100 && tabel[i, j] != 200) // check if cell is available.
-                            {
-                                isEmpty = true;
-                                break;
-                            }
-                        }
-                    }
-                }
+        //    }
+        //    return isEmpty;
+        //}
 
-            }
-            return isEmpty;
-        }
+        //static void Init_Table(int[,] tabel) {
+        //    int temp = 1;
 
-        static void Init_Table(int[,] tabel) {
-            int temp = 1;
+        //    for (int i = 0; i < tabel.GetLength(0); i++) {
+        //        for (int j = 0; j < tabel.GetLength(1); j++) {
+        //            tabel[i, j] = temp;
+        //            temp++;
+        //        }
+        //    }
+        //    PrintTable(tabel);
+        //}
 
-            for (int i = 0; i < tabel.GetLength(0); i++) {
-                for (int j = 0; j < tabel.GetLength(1); j++) {
-                    tabel[i, j] = temp;
-                    temp++;
-                }
-            }
-            PrintTable(tabel);
-        }
+        //static void Test(int[,] tabel) {
+        //    //Test method while building the program. 
+        //    //Method to be decommisioned once finised.
 
-        static void Test(int[,] tabel) {
-            //Test method while building the program. 
-            //Method to be decommisioned once finised.
+        //    Test_Init_Table(tabel);
 
-            Test_Init_Table(tabel);
+        //    bool test = false;
+        //    Console.WriteLine(tabel.GetLength(1));
 
-            bool test = false;
-            Console.WriteLine(tabel.GetLength(1));
+        //    test = Check_win_diag_principal(tabel);
+        //    Console.WriteLine("diag princ " + test);
 
-            test = Check_win_diag_principal(tabel);
-            Console.WriteLine("diag princ " + test);
+        //    test = Check_win_diag_secundar(tabel);
+        //    Console.WriteLine("diag secund " + test);
 
-            test = Check_win_diag_secundar(tabel);
-            Console.WriteLine("diag secund " + test);
+        //    test = Check_win_diag(tabel);
+        //    Console.WriteLine("diag " + test);
 
-            test = Check_win_diag(tabel);
-            Console.WriteLine("diag " + test);
+        //    test = Check_win_row(tabel);
+        //    Console.WriteLine("row " + test);
 
-            test = Check_win_row(tabel);
-            Console.WriteLine("row " + test);
+        //    test = Check_win_coll(tabel);
+        //    Console.WriteLine("col " + test);
+        //}
+        //static void Test_Init_Table(int[,] tabel) {
 
-            test = Check_win_coll(tabel);
-            Console.WriteLine("col " + test);
-        }
-        static void Test_Init_Table(int[,] tabel) {
+        //    for (int i = 0; i < tabel.GetLength(0); i++) {
+        //        for (int j = 0; j < tabel.GetLength(1); j++) {
+        //            //if (i == 0 && j== (tabel.GetLength(1)-1))
+        //            //    tabel[i, j] = 0;
+        //            //else
+        //            //    tabel[i, j] = 1;
+        //            tabel[i, j] = RandomGenerator(0, 6);
 
-            for (int i = 0; i < tabel.GetLength(0); i++) {
-                for (int j = 0; j < tabel.GetLength(1); j++) {
-                    //if (i == 0 && j== (tabel.GetLength(1)-1))
-                    //    tabel[i, j] = 0;
-                    //else
-                    //    tabel[i, j] = 1;
-                    tabel[i, j] = RandomGenerator(0, 6);
-
-                }
-            }
-            PrintTable(tabel);
-        }
+        //        }
+        //    }
+        //    PrintTable(tabel);
+        //}
 
         public static int UserInputTableSize() {
             int lines;
@@ -759,406 +795,407 @@ namespace TicTacToe {
             success = int.TryParse(userInput, out lines);
             return lines;
         }
-        public static int UserInputTableCell(int[,] tabel) {
-            string userInput;
-            bool success; int square;
+        //public static int UserInputTableCell(int[,] tabel) {
+        //    string userInput;
+        //    bool success; int square;
 
-            while (true) {
-                Console.Write("What square:");
-                userInput = Console.ReadLine();
-                success = int.TryParse(userInput, out square);
-                if (userInput.Length != 0 && success == true && square != 0 && square <= (tabel.GetLength(0) * tabel.GetLength(1)) && EmptyCell(tabel, square))
-                    break;
-                Console.WriteLine("Thats not an available number in the table. Try again.");
-            }
-            success = int.TryParse(userInput, out square);
-            return square;
-        }
+        //    while (true) {
+        //        Console.Write("What square:");
+        //        userInput = Console.ReadLine();
+        //        success = int.TryParse(userInput, out square);
+        //        if (userInput.Length != 0 && success == true && square != 0 && square <= (tabel.GetLength(0) * tabel.GetLength(1)) && EmptyCell(tabel, square))
+        //            break;
+        //        Console.WriteLine("Thats not an available number in the table. Try again.");
+        //    }
+        //    success = int.TryParse(userInput, out square);
+        //    return square;
+        //}
 
-        public static int AiCheckLosingMove(int[,] tabel) {
-            int square = -1;
-            if (AiCheckLosingMoveRow(tabel) != -1)
-                square = AiCheckLosingMoveRow(tabel);
-            else if (AiCheckLosingMoveColumn(tabel) != -1)
-                square = AiCheckLosingMoveColumn(tabel);
-            else if (AiCheckLosingMoveDiagPrincipal(tabel) != -1)
-                square = AiCheckLosingMoveDiagPrincipal(tabel);
-            else if (AiCheckLosingMoveDiagSecundar(tabel) != -1)
-                square = AiCheckLosingMoveDiagSecundar(tabel);
-            return square;
-        }
-        // TBC
-        public static int AiCheckLosingMoveRow(int[,] tabel) {
-            int square = -1;
-            int i = 0; int j = 0;
-            int count = 0;
-            int lastEmptySlot = -1;
-            bool check = false;
-
-
-            for (i = 0; i < tabel.GetLength(0); i++) {
-                lastEmptySlot = -1;
-                count = 0;
-
-                for (j = 0; j < tabel.GetLength(1); j++) {
-                    if (tabel[i, j] != 100 && tabel[i, j] != 200)
-                        lastEmptySlot = tabel[i, j];
-                    if (tabel[i, j] == 100)
-                        count++;
-                }
-                if (count == tabel.GetLength(1) - 1 && lastEmptySlot != -1) {
-                    square = lastEmptySlot;
-                    check = true;
-                    break;
-                }
-            }
-            if (check)
-                return square;
-            else
-                return -1;
-        }
-        public static int AiCheckLosingMoveColumn(int[,] tabel) {
-            int square = -1;
-            int i = 0; int j = 0;
-            int count = 0;
-            int lastEmptySlot = -1;
-            bool check = false;
-
-            for (j = 0; j < tabel.GetLength(0); j++) {
-                lastEmptySlot = -1;
-                count = 0;
-                for (i = 0; i < tabel.GetLength(1); i++) {
-                    if (tabel[i, j] != 100 && tabel[i, j] != 200)
-                        lastEmptySlot = tabel[i, j];
-                    if (tabel[i, j] == 100)
-                        count++;
-                }
-                if (count == tabel.GetLength(1) - 1 && lastEmptySlot != -1) {
-                    square = lastEmptySlot;
-                    check = true;
-                    break;
-                }
-            }
-            if (check)
-                return square;
-            else
-                return -1;
-        }
-        public static int AiCheckLosingMoveDiagPrincipal(int[,] tabel) {
-            int square = -1;
-            int j = 0;
-            int count = 0;
-            int lastEmptySlot = -1;
-            bool check = false;
-
-            while (j < tabel.GetLength(1)) {
-                if (tabel[j, j] != 100 && tabel[j, j] != 200)
-                    lastEmptySlot = tabel[j, j];
-                if (tabel[j, j] == 100)
-                    count++;
-                if (count == tabel.GetLength(1) - 1 && lastEmptySlot != -1) {
-                    square = lastEmptySlot;
-                    check = true;
-                    break;
-                }
-                else
-                    j++;
-            }
-            if (check)
-                return square;
-            else
-                return -1;
-        }
-        public static int AiCheckLosingMoveDiagSecundar(int[,] tabel) {
-            int diag2elem = tabel[0, tabel.GetLength(1) - 1];
-            int j;
-            int i;
-            bool check = false;
-            int lastEmptySlot = -1;
-            int count = 0;
-            int square = -1;
-
-            for (i = 0; i < tabel.GetLength(0); i++) {
-                for (j = tabel.GetLength(1) - 1; j >= 0; j--) {
-                    if ((i + j) == tabel.GetLength(0) - 1) {
-                        if (tabel[i, j] != 100 && tabel[i, j] != 200)
-                            lastEmptySlot = tabel[i, j];
-                        if (tabel[i, j] == 100)
-                            count++;
-                        if (count == tabel.GetLength(1) - 1 && lastEmptySlot != -1) {
-                            square = lastEmptySlot;
-                            check = true;
-                            break;
-                        }
-                    }
-                }
-            }
-            if (check)
-                return square;
-            else
-                return -1;
-        }
-
-        public static int AiCheckWinningMove(int[,] tabel) {
-            int square = -1;
-            if (AiCheckWinningMoveRow(tabel) != -1)
-                square = AiCheckWinningMoveRow(tabel);
-            else if (AiCheckWinningMoveColumn(tabel) != -1)
-                square = AiCheckWinningMoveColumn(tabel);
-            else if (AiCheckWinningMoveDiagPrincipal(tabel) != -1)
-                square = AiCheckWinningMoveDiagPrincipal(tabel);
-            else if (AiCheckWinningMoveDiagSecundar(tabel) != -1)
-                square = AiCheckWinningMoveDiagSecundar(tabel);
-            return square;
-        }
-
-        public static int AiCheckWinningMoveRow(int[,] tabel) {
-            int square = -1;
-            int i = 0; int j = 0;
-            int count = 0;
-            int lastEmptySlot = -1;
-            bool check = false;
+        //public static int AiCheckLosingMove(int[,] tabel) {
+        //    int square = -1;
+        //    if (AiCheckLosingMoveRow(tabel) != -1)
+        //        square = AiCheckLosingMoveRow(tabel);
+        //    else if (AiCheckLosingMoveColumn(tabel) != -1)
+        //        square = AiCheckLosingMoveColumn(tabel);
+        //    else if (AiCheckLosingMoveDiagPrincipal(tabel) != -1)
+        //        square = AiCheckLosingMoveDiagPrincipal(tabel);
+        //    else if (AiCheckLosingMoveDiagSecundar(tabel) != -1)
+        //        square = AiCheckLosingMoveDiagSecundar(tabel);
+        //    return square;
+        //}
+        //// TBC
+        //public static int AiCheckLosingMoveRow(int[,] tabel) {
+        //    int square = -1;
+        //    int i = 0; int j = 0;
+        //    int count = 0;
+        //    int lastEmptySlot = -1;
+        //    bool check = false;
 
 
-            for (i = 0; i < tabel.GetLength(0); i++) {
-                lastEmptySlot = -1;
-                count = 0;
+        //    for (i = 0; i < tabel.GetLength(0); i++) {
+        //        lastEmptySlot = -1;
+        //        count = 0;
 
-                for (j = 0; j < tabel.GetLength(1); j++) {
-                    if (tabel[i, j] != 100 && tabel[i, j] != 200)
-                        lastEmptySlot = tabel[i, j];
-                    if (tabel[i, j] == 200)
-                        count++;
-                }
-                if (count == tabel.GetLength(1) - 1 && lastEmptySlot != -1) {
-                    square = lastEmptySlot;
-                    check = true;
-                    break;
-                }
-            }
-            if (check)
-                return square;
-            else
-                return -1;
-        }
-        public static int AiCheckWinningMoveColumn(int[,] tabel) {
-            int square = -1;
-            int i = 0; int j = 0;
-            int count = 0;
-            int lastEmptySlot = -1;
-            bool check = false;
+        //        for (j = 0; j < tabel.GetLength(1); j++) {
+        //            if (tabel[i, j] != 100 && tabel[i, j] != 200)
+        //                lastEmptySlot = tabel[i, j];
+        //            if (tabel[i, j] == 100)
+        //                count++;
+        //        }
+        //        if (count == tabel.GetLength(1) - 1 && lastEmptySlot != -1) {
+        //            square = lastEmptySlot;
+        //            check = true;
+        //            break;
+        //        }
+        //    }
+        //    if (check)
+        //        return square;
+        //    else
+        //        return -1;
+        //}
+        //public static int AiCheckLosingMoveColumn(int[,] tabel) {
+        //    int square = -1;
+        //    int i = 0; int j = 0;
+        //    int count = 0;
+        //    int lastEmptySlot = -1;
+        //    bool check = false;
 
-            for (j = 0; j < tabel.GetLength(0); j++) {
-                lastEmptySlot = -1;
-                count = 0;
-                for (i = 0; i < tabel.GetLength(1); i++) {
-                    if (tabel[i, j] != 100 && tabel[i, j] != 200)
-                        lastEmptySlot = tabel[i, j];
-                    if (tabel[i, j] == 200)
-                        count++;
-                }
-                if (count == tabel.GetLength(1) - 1 && lastEmptySlot != -1) {
-                    square = lastEmptySlot;
-                    check = true;
-                    break;
-                }
-            }
-            if (check)
-                return square;
-            else
-                return -1;
-        }
-        public static int AiCheckWinningMoveDiagPrincipal(int[,] tabel) {
-            int square = -1;
-            int j = 0;
-            int count = 0;
-            int lastEmptySlot = -1;
-            bool check = false;
+        //    for (j = 0; j < tabel.GetLength(0); j++) {
+        //        lastEmptySlot = -1;
+        //        count = 0;
+        //        for (i = 0; i < tabel.GetLength(1); i++) {
+        //            if (tabel[i, j] != 100 && tabel[i, j] != 200)
+        //                lastEmptySlot = tabel[i, j];
+        //            if (tabel[i, j] == 100)
+        //                count++;
+        //        }
+        //        if (count == tabel.GetLength(1) - 1 && lastEmptySlot != -1) {
+        //            square = lastEmptySlot;
+        //            check = true;
+        //            break;
+        //        }
+        //    }
+        //    if (check)
+        //        return square;
+        //    else
+        //        return -1;
+        //}
+        //public static int AiCheckLosingMoveDiagPrincipal(int[,] tabel) {
+        //    int square = -1;
+        //    int j = 0;
+        //    int count = 0;
+        //    int lastEmptySlot = -1;
+        //    bool check = false;
 
-            while (j < tabel.GetLength(1)) {
-                if (tabel[j, j] != 100 && tabel[j, j] != 200)
-                    lastEmptySlot = tabel[j, j];
-                if (tabel[j, j] == 200)
-                    count++;
-                if (count == tabel.GetLength(1) - 1 && lastEmptySlot != -1) {
-                    square = lastEmptySlot;
-                    check = true;
-                    break;
-                }
-                else
-                    j++;
-            }
-            if (check)
-                return square;
-            else
-                return -1;
-        }
-        public static int AiCheckWinningMoveDiagSecundar(int[,] tabel) {
-            int diag2elem = tabel[0, tabel.GetLength(1) - 1];
-            int j;
-            int i;
-            bool check = false;
-            int lastEmptySlot = -1;
-            int count = 0;
-            int square = -1;
+        //    while (j < tabel.GetLength(1)) {
+        //        if (tabel[j, j] != 100 && tabel[j, j] != 200)
+        //            lastEmptySlot = tabel[j, j];
+        //        if (tabel[j, j] == 100)
+        //            count++;
+        //        if (count == tabel.GetLength(1) - 1 && lastEmptySlot != -1) {
+        //            square = lastEmptySlot;
+        //            check = true;
+        //            break;
+        //        }
+        //        else
+        //            j++;
+        //    }
+        //    if (check)
+        //        return square;
+        //    else
+        //        return -1;
+        //}
+        //public static int AiCheckLosingMoveDiagSecundar(int[,] tabel) {
+        //    int diag2elem = tabel[0, tabel.GetLength(1) - 1];
+        //    int j;
+        //    int i;
+        //    bool check = false;
+        //    int lastEmptySlot = -1;
+        //    int count = 0;
+        //    int square = -1;
 
-            for (i = 0; i < tabel.GetLength(0); i++) {
-                for (j = tabel.GetLength(1) - 1; j >= 0; j--) {
-                    if ((i + j) == tabel.GetLength(0) - 1) {
-                        if (tabel[i, j] != 100 && tabel[i, j] != 200)
-                            lastEmptySlot = tabel[i, j];
-                        if (tabel[i, j] == 200)
-                            count++;
-                        if (count == tabel.GetLength(1) - 1 && lastEmptySlot != -1) {
-                            square = lastEmptySlot;
-                            check = true;
-                            break;
-                        }
-                    }
-                }
-            }
-            if (check)
-                return square;
-            else
-                return -1;
-        }
+        //    for (i = 0; i < tabel.GetLength(0); i++) {
+        //        for (j = tabel.GetLength(1) - 1; j >= 0; j--) {
+        //            if ((i + j) == tabel.GetLength(0) - 1) {
+        //                if (tabel[i, j] != 100 && tabel[i, j] != 200)
+        //                    lastEmptySlot = tabel[i, j];
+        //                if (tabel[i, j] == 100)
+        //                    count++;
+        //                if (count == tabel.GetLength(1) - 1 && lastEmptySlot != -1) {
+        //                    square = lastEmptySlot;
+        //                    check = true;
+        //                    break;
+        //                }
+        //            }
+        //        }
+        //    }
+        //    if (check)
+        //        return square;
+        //    else
+        //        return -1;
+        //}
 
-        public static int AiNextBestMove(int[,] tabel)   // to finish
-        {
-            int square = -1;
-            int ai = 200;
-            int iMid = tabel.GetLength(0) / 2;
-            int jMid = tabel.GetLength(1) / 2;
+        //public static int AiCheckWinningMove(int[,] tabel) {
+        //    int square = -1;
+        //    if (AiCheckWinningMoveRow(tabel) != -1)
+        //        square = AiCheckWinningMoveRow(tabel);
+        //    else if (AiCheckWinningMoveColumn(tabel) != -1)
+        //        square = AiCheckWinningMoveColumn(tabel);
+        //    else if (AiCheckWinningMoveDiagPrincipal(tabel) != -1)
+        //        square = AiCheckWinningMoveDiagPrincipal(tabel);
+        //    else if (AiCheckWinningMoveDiagSecundar(tabel) != -1)
+        //        square = AiCheckWinningMoveDiagSecundar(tabel);
+        //    return square;
+        //}
 
-            if (CheckIfCellIsEmpty(tabel, iMid, jMid))
-                square = tabel[iMid, jMid];
-
-            // check if diag does not contain enemy square
-            // check rows that do not contain enemy square
-            // check column that do not contain enemy square
-            //
-
-            if (tabel[tabel.GetLength(0) / 2, tabel.GetLength(1) / 2] == ai) {
-
-            }
-            return square;
-        }
-
-        public static bool CheckIfCellIsEmpty(int[,] tabel, int i, int j) {
-            if (tabel[i, j] != 100 && tabel[i, j] != 200)
-                return true;
-            else
-                return false;
-
-        }
-
-        public static int AiInputTableCell(int[,] tabel) {
-            int square = 0;
-            int i = 0; int j = 0;
-            bool check = false;
-
-            if (AiCheckWinningMove(tabel) != -1) {
-                square = AiCheckWinningMove(tabel);
-            }
-            else if (AiCheckLosingMove(tabel) != -1) {
-                square = AiCheckLosingMove(tabel);
-            }
-            else if (CheckIfCellIsEmpty(tabel, tabel.GetLength(0) / 2, tabel.GetLength(1) / 2))    // check middle of the table if available
-            {                                                                               // to modify into next best              
-                square = tabel[tabel.GetLength(0) / 2, tabel.GetLength(1) / 2];             //place instead of mid
-            }
-            else if (AiNextBestMove(tabel) != -1)
-                square = AiNextBestMove(tabel);
-            else {
-                square = RandomAiInputTableCell(tabel);                                     //random available moves
-                if (square == -1) {
-                    //                                                                      // checks available moves
-                    for (i = 0; i < tabel.GetLength(0); i++) {
-                        for (j = 0; j < tabel.GetLength(1); j++) {
-                            if (CheckIfCellIsEmpty(tabel, i, j)) {
-                                square = tabel[i, j];
-                                check = true;
-                                break;
-                            }
-                        }
-                        if (check == true)
-                            break;
-                    }
-                    //}                                                                    // checks available moves
-                }
+        //public static int AiCheckWinningMoveRow(int[,] tabel) {
+        //    int square = -1;
+        //    int i = 0; int j = 0;
+        //    int count = 0;
+        //    int lastEmptySlot = -1;
+        //    bool check = false;
 
 
-            }
+        //    for (i = 0; i < tabel.GetLength(0); i++) {
+        //        lastEmptySlot = -1;
+        //        count = 0;
 
-            return square;
+        //        for (j = 0; j < tabel.GetLength(1); j++) {
+        //            if (tabel[i, j] != 100 && tabel[i, j] != 200)
+        //                lastEmptySlot = tabel[i, j];
+        //            if (tabel[i, j] == 200)
+        //                count++;
+        //        }
+        //        if (count == tabel.GetLength(1) - 1 && lastEmptySlot != -1) {
+        //            square = lastEmptySlot;
+        //            check = true;
+        //            break;
+        //        }
+        //    }
+        //    if (check)
+        //        return square;
+        //    else
+        //        return -1;
+        //}
+        //public static int AiCheckWinningMoveColumn(int[,] tabel) {
+        //    int square = -1;
+        //    int i = 0; int j = 0;
+        //    int count = 0;
+        //    int lastEmptySlot = -1;
+        //    bool check = false;
+
+        //    for (j = 0; j < tabel.GetLength(0); j++) {
+        //        lastEmptySlot = -1;
+        //        count = 0;
+        //        for (i = 0; i < tabel.GetLength(1); i++) {
+        //            if (tabel[i, j] != 100 && tabel[i, j] != 200)
+        //                lastEmptySlot = tabel[i, j];
+        //            if (tabel[i, j] == 200)
+        //                count++;
+        //        }
+        //        if (count == tabel.GetLength(1) - 1 && lastEmptySlot != -1) {
+        //            square = lastEmptySlot;
+        //            check = true;
+        //            break;
+        //        }
+        //    }
+        //    if (check)
+        //        return square;
+        //    else
+        //        return -1;
+        //}
+        //public static int AiCheckWinningMoveDiagPrincipal(int[,] tabel) {
+        //    int square = -1;
+        //    int j = 0;
+        //    int count = 0;
+        //    int lastEmptySlot = -1;
+        //    bool check = false;
+
+        //    while (j < tabel.GetLength(1)) {
+        //        if (tabel[j, j] != 100 && tabel[j, j] != 200)
+        //            lastEmptySlot = tabel[j, j];
+        //        if (tabel[j, j] == 200)
+        //            count++;
+        //        if (count == tabel.GetLength(1) - 1 && lastEmptySlot != -1) {
+        //            square = lastEmptySlot;
+        //            check = true;
+        //            break;
+        //        }
+        //        else
+        //            j++;
+        //    }
+        //    if (check)
+        //        return square;
+        //    else
+        //        return -1;
+        //}
+        //public static int AiCheckWinningMoveDiagSecundar(int[,] tabel) {
+        //    int diag2elem = tabel[0, tabel.GetLength(1) - 1];
+        //    int j;
+        //    int i;
+        //    bool check = false;
+        //    int lastEmptySlot = -1;
+        //    int count = 0;
+        //    int square = -1;
+
+        //    for (i = 0; i < tabel.GetLength(0); i++) {
+        //        for (j = tabel.GetLength(1) - 1; j >= 0; j--) {
+        //            if ((i + j) == tabel.GetLength(0) - 1) {
+        //                if (tabel[i, j] != 100 && tabel[i, j] != 200)
+        //                    lastEmptySlot = tabel[i, j];
+        //                if (tabel[i, j] == 200)
+        //                    count++;
+        //                if (count == tabel.GetLength(1) - 1 && lastEmptySlot != -1) {
+        //                    square = lastEmptySlot;
+        //                    check = true;
+        //                    break;
+        //                }
+        //            }
+        //        }
+        //    }
+        //    if (check)
+        //        return square;
+        //    else
+        //        return -1;
+        //}
+
+        //public static int AiNextBestMove(int[,] tabel)   // to finish
+        //{
+        //    int square = -1;
+        //    int ai = 200;
+        //    int iMid = tabel.GetLength(0) / 2;
+        //    int jMid = tabel.GetLength(1) / 2;
+
+        //    if (CheckIfCellIsEmpty(tabel, iMid, jMid))
+        //        square = tabel[iMid, jMid];
+
+        //    // check if diag does not contain enemy square
+        //    // check rows that do not contain enemy square
+        //    // check column that do not contain enemy square
+        //    //
+
+        //    if (tabel[tabel.GetLength(0) / 2, tabel.GetLength(1) / 2] == ai) {
+
+        //    }
+        //    return square;
+        //}
+
+        //public static bool CheckIfCellIsEmpty(int[,] tabel, int i, int j) {
+        //    if (tabel[i, j] != 100 && tabel[i, j] != 200)
+        //        return true;
+        //    else
+        //        return false;
+
+        //}
+
+        //public static int AiInputTableCell(int[,] tabel) {
+        //    int square = 0;
+        //    int i = 0; int j = 0;
+        //    bool check = false;
+
+        //    if (AiCheckWinningMove(tabel) != -1) {
+        //        square = AiCheckWinningMove(tabel);
+        //    }
+        //    else if (AiCheckLosingMove(tabel) != -1) {
+        //        square = AiCheckLosingMove(tabel);
+        //    }
+        //    else if (CheckIfCellIsEmpty(tabel, tabel.GetLength(0) / 2, tabel.GetLength(1) / 2))    // check middle of the table if available
+        //    {                                                                               // to modify into next best              
+        //        square = tabel[tabel.GetLength(0) / 2, tabel.GetLength(1) / 2];             //place instead of mid
+        //    }
+        //    else if (AiNextBestMove(tabel) != -1)
+        //        square = AiNextBestMove(tabel);
+        //    else {
+        //        square = RandomAiInputTableCell(tabel);                                     //random available moves
+        //        if (square == -1) {
+        //            //                                                                      // checks available moves
+        //            for (i = 0; i < tabel.GetLength(0); i++) {
+        //                for (j = 0; j < tabel.GetLength(1); j++) {
+        //                    if (CheckIfCellIsEmpty(tabel, i, j)) {
+        //                        square = tabel[i, j];
+        //                        check = true;
+        //                        break;
+        //                    }
+        //                }
+        //                if (check == true)
+        //                    break;
+        //            }
+        //            //}                                                                    // checks available moves
+        //        }
 
 
-        }
+        //    }
 
-        public static int RandomAiInputTableCell(int[,] tabel) {
-            int i, j;
-            int square = 1;
-            bool check = false;
-            int counter = 0;
-            int randomMaxTries = tabel.GetLength(0) * tabel.GetLength(1) + (tabel.GetLength(0) / 2 * tabel.GetLength(1) / 2) / 2;
+        //    return square;
 
-            i = RandomGenerator(0, tabel.GetLength(0));
-            j = RandomGenerator(0, tabel.GetLength(1));
 
-            while (check == false) {
-                if (counter == randomMaxTries) {
-                    break;
-                }
-                if (CheckIfCellIsEmpty(tabel, i, j)) {
-                    square = tabel[i, j];
-                    check = true;
-                }
-                i = RandomGenerator(0, tabel.GetLength(0));
-                j = RandomGenerator(0, tabel.GetLength(1));
-                counter++;
+        //}
 
-            }
+        //public static int RandomAiInputTableCell(int[,] tabel) {
+        //    int i, j;
+        //    int square = 1;
+        //    bool check = false;
+        //    int counter = 0;
+        //    int randomMaxTries = tabel.GetLength(0) * tabel.GetLength(1) + (tabel.GetLength(0) / 2 * tabel.GetLength(1) / 2) / 2;
 
-            if (counter == randomMaxTries) {
-                return -1;
-            }
-            else
-                return square;
+        //    i = RandomGenerator(0, tabel.GetLength(0));
+        //    j = RandomGenerator(0, tabel.GetLength(1));
 
-        }                       // returns a random open square or -1 if there is a long wait time.
+        //    while (check == false) {
+        //        if (counter == randomMaxTries) {
+        //            break;
+        //        }
+        //        if (CheckIfCellIsEmpty(tabel, i, j)) {
+        //            square = tabel[i, j];
+        //            check = true;
+        //        }
+        //        i = RandomGenerator(0, tabel.GetLength(0));
+        //        j = RandomGenerator(0, tabel.GetLength(1));
+        //        counter++;
 
-        static void UpdateTableCell(int[,] tabel, int Square, int Player) {
-            //Method checks each line to find the correct line. 
-            //Once found it checks for the correct square to place the player or AI sign
-            //once sign is placed into the table, it breaks out of the loop.
+        //    }
 
-            //Method takes tabel to be able to modify the values of the table
-            //Method takes Square, the place Player selected in the table
-            //Method takes player. Might be temporary until AI function is defined.
+        //    if (counter == randomMaxTries) {
+        //        return -1;
+        //    }
+        //    else
+        //        return square;
 
-            int FriendOrFoe = Player;
-            int square = Square - 1;
+        //}                       // returns a random open square or -1 if there is a long wait time.
 
-            for (int i = 0; i < tabel.GetLength(0); i++) {
+        //static void UpdateTableCell(int[,] tabel, int Square, int Player) {
+        //    //Method checks each line to find the correct line. 
+        //    //Once found it checks for the correct square to place the player or AI sign
+        //    //once sign is placed into the table, it breaks out of the loop.
 
-                if ((square / tabel.GetLength(0) == i)) {
-                    if (square % tabel.GetLength(0) == 0) {
-                        tabel[i, 0] = FriendOrFoe;
-                        break;
-                    }
-                    for (int j = 0; j < tabel.GetLength(1); j++) {
+        //    //Method takes tabel to be able to modify the values of the table
+        //    //Method takes Square, the place Player selected in the table
+        //    //Method takes player. Might be temporary until AI function is defined.
 
-                        if (square % tabel.GetLength(0) == j) {
-                            tabel[i, j] = FriendOrFoe;
-                            break;
-                        }
-                    }
-                }
+        //    int FriendOrFoe = Player;
+        //    int square = Square - 1;
 
-            }
+        //    for (int i = 0; i < tabel.GetLength(0); i++) {
 
-        }
-        ///
+        //        if ((square / tabel.GetLength(0) == i)) {
+        //            if (square % tabel.GetLength(0) == 0) {
+        //                tabel[i, 0] = FriendOrFoe;
+        //                break;
+        //            }
+        //            for (int j = 0; j < tabel.GetLength(1); j++) {
+
+        //                if (square % tabel.GetLength(0) == j) {
+        //                    tabel[i, j] = FriendOrFoe;
+        //                    break;
+        //                }
+        //            }
+        //        }
+
+        //    }
+
+        //}
+        ////
+
         static bool UserInputString(string Message) {
             string userInput;
             while (true) {
@@ -1174,32 +1211,34 @@ namespace TicTacToe {
             else
                 return false;
         }
-        static void ShowWinner(int[,] tabel) {
 
-        }
-        static bool CheckDraw(int[,] tabel) {
-            int i, j;
-            int availableSquares = tabel.GetLength(0) * tabel.GetLength(1);
+        //static void ShowWinner(int[,] tabel) {
 
-            for (i = 0; i < tabel.GetLength(0); i++) {
-                for (j = 0; j < tabel.GetLength(1); j++) {
-                    if (tabel[i, j] == 100 || tabel[i, j] == 200) {
-                        availableSquares--;
-                    }
-                    else {
-                        return false;
-                    }
+        //}
+        //static bool CheckDraw(int[,] tabel) {
+        //    int i, j;
+        //    int availableSquares = tabel.GetLength(0) * tabel.GetLength(1);
+
+        //    for (i = 0; i < tabel.GetLength(0); i++) {
+        //        for (j = 0; j < tabel.GetLength(1); j++) {
+        //            if (tabel[i, j] == 100 || tabel[i, j] == 200) {
+        //                availableSquares--;
+        //            }
+        //            else {
+        //                return false;
+        //            }
 
 
-                }
-            }
+        //        }
+        //    }
 
-            if (availableSquares == 0)
-                return true;
-            else
-                return false;
+        //    if (availableSquares == 0)
+        //        return true;
+        //    else
+        //        return false;
 
-        }
+        //}
+
         static void Main(string[] args) {
             //var p='X'; 
             //var a = 'O'; 
@@ -1222,7 +1261,7 @@ namespace TicTacToe {
             bool isDraw = false;
             int player; string stringPlayer;
             int AI; string stringAI;
-            int winner = 0;
+            int winner = 0; string stringWinner;
 
             string playAgain = "Would you like to play again? (Y/N)";
             string firstOrSecond = "Would you like to go first? (Y/N)";
@@ -1233,7 +1272,7 @@ namespace TicTacToe {
                 //lines = UserInputTableSize();
                 lines = 3; // testing purposes
 
-                int[,] tabel = new int[lines, lines];
+                //int[,] tabel = new int[lines, lines];
                 Cell[,] ObjectTable = new Cell[lines, lines];
 
 
@@ -1246,79 +1285,91 @@ namespace TicTacToe {
                     AI = 200;
                     stringAI = "0";
                     isDraw = false;
+                    stringWinner = "";
 
                     // Init_table or Test to be run exclusively 
 
-                    Init_Table(tabel);
+                    //Init_Table(tabel);
                     CreateObjectTable(ObjectTable);
-                    
+
                     //Test(tabel);
 
                     DefaultConsoleColor();
 
-                    isPlayerFirst = UserInputString(firstOrSecond);             // player choses if he goes 1st  or 2nd 
-                                                                                //isPlayerFirst = false;
-                                                                                //Console.WriteLine("Normal Table"); 
-                    PrintTable(tabel);
+                    //isPlayerFirst = UserInputString(firstOrSecond);             // player choses if he goes 1st  or 2nd 
+                    isPlayerFirst = true;
+
+                    //Console.WriteLine("Normal Table"); 
+                    //PrintTable(tabel);
                     //Console.WriteLine("Object Table"); 
                     //PrintObjectTable(ObjectTable);
                 }
 
+                //initialize player|AI based on turncount
                 var turncount = 0;
                 if (isPlayerFirst) {
+                    stringPlayer = "X";
+                    stringAI = "0";
                     turncount = 1;
                 }
-                
+                else {
+                    stringPlayer = "0";
+                    stringAI = "X";
+                    turncount = 0;
+                }
+
                 {
                     do {                                                     //gameplay loop - plays until winner is found
-                        if (!isPlayerFirst && turncount == 0) {
+                        if (turncount == 0) {             //skips else block on 1st turn if player is second
 
                         }
                         else {
                             var userInput = UserInputTableCell(ObjectTable);
-                            UpdateTableCell(tabel, userInput, player);
-                            //UpdateTableCell(ObjectTable, userInput, stringPlayer);
+                            //UpdateTableCell(tabel, userInput, player);
+                            UpdateTableCell(ObjectTable, userInput, stringPlayer);
                             //Console.WriteLine("Normal Table"); 
-                            PrintTable(tabel);
+                            //PrintTable(tabel);
                             //Console.WriteLine("Object Table");
 
-                            //PrintObjectTable(ObjectTable);
+                            PrintObjectTable(ObjectTable);
                         }
 
-
-                        if (CheckDraw(tabel)) {
+                        
+                        if (CheckDraw(ObjectTable)) {
                             isDraw = true;
                             break;
                         }
-                        if (Check_win_all_casses(tabel)) {
-                            winner = player;
+                        var temp = CheckWin(ObjectTable);
+                        if (temp != -1) {
+                            //winner = player;
+                            stringWinner = stringPlayer;
                             break;
                         }
 
-                        UpdateTableCell(tabel, AiInputTableCell(tabel), AI);
-                        PrintTable(tabel);
-                        //UpdateTableCell(ObjectTable, UserInputTableCell(ObjectTable), stringAI);
-                        PrintTable(tabel);
-                        //PrintObjectTable(ObjectTable);
+                        //UpdateTableCell(tabel, AiInputTableCell(tabel), AI);
+                        //PrintTable(tabel);
+                        UpdateTableCell(ObjectTable, AIInputTableCell(ObjectTable, stringAI), stringAI);
+                        PrintObjectTable(ObjectTable);
 
-                        if (CheckDraw(tabel)) {
+                        if (CheckDraw(ObjectTable)) {
                             isDraw = true;
                             break;
                         }
                         turncount++;
-                    } while (!Check_win_all_casses(tabel));
+                    } while (CheckWin(ObjectTable) == -1);
 
                 } // Player always first. 
 
-                if (isDraw && winner == 0) {
+                if (isDraw) {
                     Console.WriteLine("Now no one gets to be a winner. We are all losers!");
                 }
-                if (winner == player) {
+                if (stringWinner == stringPlayer && isDraw == false) {
                     Console.WriteLine("Congratz! You win!");
                 }
-                if (winner != player && isDraw == false) {
+                if (stringWinner == stringAI && isDraw == false) {
                     Console.WriteLine("Sucks to be you!");
                 }
+                ShowWinner(CheckWin(ObjectTable));
             } while (UserInputString(playAgain));
 
 

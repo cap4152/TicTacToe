@@ -4,7 +4,7 @@
   <description asmv2:iconFile="x-mark-xxl.ico" xmlns="urn:schemas-microsoft-com:asm.v1" />
   <application />
   <entryPoint>
-    <assemblyIdentity name="TicTacToe" version="1.0.8451.2709" language="neutral" processorArchitecture="msil" />
+    <assemblyIdentity name="TicTacToe" version="1.0.9311.27946" language="neutral" processorArchitecture="msil" />
     <commandLine file="TicTacToe.exe" parameters="" />
   </entryPoint>
   <trustInfo>
@@ -33,7 +33,7 @@
   <dependency>
     <dependentOS>
       <osVersionInfo>
-        <os majorVersion="5" minorVersion="1" buildNumber="2600" servicePackMajor="0" />
+        <os majorVersion="4" minorVersion="10" buildNumber="0" servicePackMajor="0" />
       </osVersionInfo>
     </dependentOS>
   </dependency>
@@ -51,18 +51,6 @@
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
         <dsig:DigestValue>rMzPvkXZ8I/+7ZkW43sz6YxlvgEs//bn+ntnIQzh/vs=</dsig:DigestValue>
-      </hash>
-    </dependentAssembly>
-  </dependency>
-  <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="System.Collections.Immutable.dll" size="193664">
-      <assemblyIdentity name="System.Collections.Immutable" version="6.0.0.0" publicKeyToken="B03F5F7F11D50A3A" language="neutral" processorArchitecture="msil" />
-      <hash>
-        <dsig:Transforms>
-          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
-        </dsig:Transforms>
-        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>aeV6xBIgDkf+e1+TOjDFlOH8FRdJjIiSCqvHAvXqAKc=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -103,24 +91,24 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="TicTacToe.exe" size="121312">
-      <assemblyIdentity name="TicTacToe" version="1.0.8451.2709" language="neutral" processorArchitecture="msil" />
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="TicTacToe.exe" size="114688">
+      <assemblyIdentity name="TicTacToe" version="1.0.9311.27946" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>qU2EWAwG6FvZWXxzJ/rYilhnnK64sj50+EztsSCY6wA=</dsig:DigestValue>
+        <dsig:DigestValue>Y1Ql+fDoqEHPRxgd13uclsiJ9yZHLPV7byzd7A48u3s=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
-  <file name="TicTacToe.exe.config" size="802">
+  <file name="TicTacToe.exe.config" size="794">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>yzYCgznxN8Ld6sck2nrX0Q4isPiJSxaJFAhJKw3TKWY=</dsig:DigestValue>
+      <dsig:DigestValue>hrnxr8HT7GN7KXY+5ZSk/gbaQhIkm8LOAiibbKqTYzI=</dsig:DigestValue>
     </hash>
   </file>
   <file name="x-mark-xxl.ico" size="102575">

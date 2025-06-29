@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>TicTacToe</RootNamespace>
     <AssemblyName>TicTacToe</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <IsWebBootstrapper>false</IsWebBootstrapper>
@@ -27,6 +27,7 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -49,10 +50,10 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>585E78A81518D9B5D1DB4380EFAAB226D3C10DDE</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>AC3E70420CADF7EF4FF2413E393FA96AC9AAA19B</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>TicTac_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>TicTac_1_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
@@ -64,7 +65,7 @@
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>TicTacToe.Program</StartupObject>
@@ -101,11 +102,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="OldCode" />
     <Compile Include="TestingClass.cs" />
     <None Include="Ciorna" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="Properties\app.manifest" />
+    <None Include="TicTac_1_TemporaryKey.pfx" />
     <None Include="TicTac_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
